@@ -40,10 +40,13 @@ jobs:
       - name: Run Pint (coding style)
         run: ./vendor/bin/pint --test
 
-      - name: Run PHPUnit inside app container
+      - name: Prepare environment and run PHPUnit on runner
         run: |
-          docker compose exec -T --user root app bash -lc "chmod 777 /tmp"
-          docker compose exec -T app bash -lc "./vendor/bin/phpunit --testdox --log-junit /tmp/junit.xml"
+          # prepare local test env and logs directory on the runner
+          cp .env.example .env || true
+          php artisan key:generate --ansi || true
+          mkdir -p build/logs
+          ./vendor/bin/phpunit --testdox --log-junit build/logs/junit.xml
 
       - name: Upload JUnit report
         if: always()
