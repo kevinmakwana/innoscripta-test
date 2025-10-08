@@ -126,6 +126,19 @@ jobs:
         run: |
           docker compose exec -T app bash -lc "php /var/www/html/tools/generate_test_summary.php /tmp/junit.xml /tmp/test-summary.md"
 
+      - name: Copy test artifacts from container to runner
+        if: always()
+        run: |
+          # copy junit.xml and test-summary.md from the app container to the runner
+          echo "Copying /tmp/junit.xml from app container to runner if it exists..."
+          docker compose exec -T app bash -lc 'if [ -f /tmp/junit.xml ]; then cat /tmp/junit.xml; fi' > /tmp/junit.xml || true
+          echo "Copying /tmp/test-summary.md from app container to runner if it exists..."
+          docker compose exec -T app bash -lc 'if [ -f /tmp/test-summary.md ]; then cat /tmp/test-summary.md; fi' > /tmp/test-summary.md || true
+          # remove placeholders if empty (so upload-artifact will warn only when file absent)
+          if [ ! -s /tmp/junit.xml ]; then rm -f /tmp/junit.xml || true; else echo "Wrote /tmp/junit.xml ($(wc -c < /tmp/junit.xml) bytes)"; fi
+          if [ ! -s /tmp/test-summary.md ]; then rm -f /tmp/test-summary.md || true; else echo "Wrote /tmp/test-summary.md ($(wc -c < /tmp/test-summary.md) bytes)"; fi
+          ls -la /tmp | sed -n '1,120p' || true
+
       - name: Upload junit results
         if: always()
         uses: actions/upload-artifact@v4
