@@ -40,8 +40,10 @@ jobs:
       - name: Run Pint (coding style)
         run: ./vendor/bin/pint --test
 
-      - name: Run PHPUnit
-        run: ./vendor/bin/phpunit --testdox --log-junit build/logs/junit.xml
+      - name: Run PHPUnit inside app container
+        run: |
+          docker compose exec -T --user root app bash -lc "chmod 777 /tmp"
+          docker compose exec -T app bash -lc "./vendor/bin/phpunit --testdox --log-junit /tmp/junit.xml"
 
       - name: Upload JUnit report
         if: always()
