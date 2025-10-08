@@ -46,6 +46,10 @@ jobs:
           cp .env.example .env || true
           php artisan key:generate --ansi || true
           mkdir -p build/logs
+          # ensure sqlite database file exists for sqlite testing
+          mkdir -p database
+          touch database/database.sqlite
+          chmod 666 database/database.sqlite
           ./vendor/bin/phpunit --testdox --log-junit build/logs/junit.xml
 
       - name: Upload JUnit report
