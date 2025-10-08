@@ -1,0 +1,34 @@
+name: Validate OpenAPI JSON
+
+on:
+  push:
+    paths:
+      - 'docs/openapi.json'
+  pull_request:
+    paths:
+      - 'docs/openapi.json'
+
+jobs:
+  validate-openapi:
+    name: Validate OpenAPI JSON
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v3
+        with:
+          php-version: '8.2'
+
+      - name: Validate JSON syntax
+        run: php -r "json_decode(file_get_contents('docs/openapi.json')); if (json_last_error() !== JSON_ERROR_NONE) { echo 'JSON error: ' . json_last_error_msg() . "\n"; exit(1);} echo 'OK';"
+
+      - name: Validate OpenAPI semantics (openapi-cli)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run openapi-cli validate
+        run: |
+          npx --yes @redocly/openapi-cli@2.0.0 validate docs/openapi.json

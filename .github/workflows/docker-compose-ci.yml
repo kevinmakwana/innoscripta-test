@@ -1,0 +1,144 @@
+name: Docker Compose CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build app image with buildx and cache to GHCR
+        id: build_app_image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: false
+          load: true
+          target: dev
+          platforms: linux/amd64
+          tags: ghcr.io/${{ github.repository_owner }}/innoscripta-test-app:ci-${{ github.sha }}
+          # cache-to/from removed to avoid GHCR cache push errors (403 Forbidden)
+
+      - name: Load built image into Docker
+        run: |
+          docker image tag ghcr.io/${{ github.repository_owner }}/innoscripta-test-app:ci-${{ github.sha }} innoscripta-test-app:latest
+
+      - name: Build and start Docker Compose (using cached image)
+        run: |
+          docker compose up -d --build
+
+      - name: Wait for app container healthy
+        run: |
+          # wait up to 60s for the app service to be healthy/responding
+          for i in $(seq 1 60); do
+            docker compose exec -T app bash -lc "php -v > /dev/null 2>&1" && break || sleep 1;
+          done
+
+      - name: Install composer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer in container (as root)
+        run: |
+          # install composer as root so installer can write to system dirs
+          docker compose exec -T --user root app bash -lc "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && chmod +x /usr/local/bin/composer"
+
+      - name: Install dev dependencies in container (as root)
+        run: |
+          # run composer install as root (vendor/ may be created by root), then restore ownership
+          docker compose exec -T --user root app bash -lc "/usr/local/bin/composer install --no-progress --prefer-dist --no-interaction"
+          
+      - name: Fix permissions for entire project
+        run: |
+          # fix ownership of entire project and ensure all directories are writable
+          docker compose exec -T --user root app bash -lc "chown -R www-data:www-data /var/www/html && \
+            chmod -R 755 /var/www/html && \
+            chmod -R 777 /var/www/html/storage /var/www/html/bootstrap"
+
+      - name: Wait for services to be ready
+        run: |
+          # wait for MySQL to be ready (simpler approach)
+          echo "Waiting for MySQL to be ready..."
+          until docker compose exec -T mysql mysqladmin ping -h localhost --silent; do
+            echo "MySQL is unavailable - sleeping"
+            sleep 2
+          done
+          echo "MySQL is ready!"
+          
+          # wait for Redis to be ready
+          echo "Waiting for Redis to be ready..."
+          until docker compose exec -T redis redis-cli ping > /dev/null 2>&1; do
+            echo "Redis is unavailable - sleeping"  
+            sleep 2
+          done
+          echo "Redis is ready!"
+
+      - name: Setup Laravel application
+        run: |
+          # setup env file, app key, and run migrations as root to avoid permission issues
+          docker compose exec -T --user root app bash -lc "cp .env.example .env && \
+            chown www-data:www-data .env && \
+            chmod 644 .env"
+          
+          # run Laravel setup commands as the app user  
+          docker compose exec -T app bash -lc "php artisan key:generate && \
+            php artisan migrate --force && \
+            php artisan db:seed --force"
+
+      - name: Run PHPStan inside app container
+        run: docker compose exec -T app bash -lc "./vendor/bin/phpstan analyse --memory-limit=1G"
+
+      - name: Run PHPUnit inside app container
+        run: |
+          # ensure tmp directory is writable and run phpunit
+          docker compose exec -T --user root app bash -lc "chmod 777 /tmp"
+          docker compose exec -T app bash -lc "./vendor/bin/phpunit --testdox --colors=never --log-junit /tmp/junit.xml"
+
+      - name: Generate test summary markdown
+        run: |
+          docker compose exec -T app bash -lc "php /var/www/html/tools/generate_test_summary.php /tmp/junit.xml /tmp/test-summary.md"
+
+      - name: Upload junit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-results
+          path: /tmp/junit.xml
+
+      - name: Upload test summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-summary
+          path: /tmp/test-summary.md
+
+      - name: Tear down compose
+        if: always()
+        run: docker compose down --volumes --remove-orphans

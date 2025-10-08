@@ -1,0 +1,50 @@
+name: Publish OpenAPI Docs
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'docs/**'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install swagger-ui-dist
+        run: npm ci --no-audit --no-fund || npm i swagger-ui-dist@4 --silent
+
+      - name: Build docs site
+        run: |
+          mkdir -p out
+          node -e "const fs=require('fs'); const su=require('swagger-ui-dist'); fs.copyFileSync(require.resolve('swagger-ui-dist/swagger-ui-bundle.js'), 'out/swagger-ui-bundle.js'); fs.copyFileSync(require.resolve('swagger-ui-dist/swagger-ui.css'), 'out/swagger-ui.css');"
+          cp docs/openapi.json out/openapi.json
+          cat > out/index.html <<'HTML'
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>API Docs</title>
+    <link rel="stylesheet" href="./swagger-ui.css">
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="./swagger-ui-bundle.js"></script>
+    <script>
+      window.ui = SwaggerUIBundle({ url: './openapi.json', dom_id: '#swagger-ui' });
+    </script>
+  </body>
+</html>
+HTML
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out

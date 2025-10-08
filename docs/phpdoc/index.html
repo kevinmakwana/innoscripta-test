@@ -1,0 +1,341 @@
+<!doctype html><html><head><meta charset="utf-8"><title>PHPDoc - Innoscripta Test</title><style>body{font-family:Arial,Helvetica,sans-serif}pre{background:#f7f7f7;padding:8px;border-radius:4px}</style></head><body><h1>PHPDoc Summary</h1><h2>File: app/Providers/AppServiceProvider.php</h2>
+<h3>Class: AppServiceProvider</h3>
+<h4>Methods</h4>
+<ul><li><b>register</b><pre>/**
+     * Register any application services.
+     */</pre></li>
+<li><b>boot</b><pre>/**
+     * Bootstrap any application services.
+     */</pre></li>
+</ul>
+<h2>File: app/Providers/RouteServiceProvider.php</h2>
+<h3>Class: RouteServiceProvider</h3>
+<h4>Methods</h4>
+<ul><li><b>boot</b></li>
+<li><b>Route</b></li>
+</ul>
+<h2>File: app/Models/Category.php</h2>
+<h3>Class: Category</h3>
+<h4>Methods</h4>
+<ul><li><b>articles</b></li>
+</ul>
+<h3>Class: UNKNOWN</h3>
+<h2>File: app/Models/UserPreference.php</h2>
+<h3>Class: UserPreference</h3>
+<h4>Methods</h4>
+<ul><li><b>user</b></li>
+</ul>
+<h3>Class: UNKNOWN</h3>
+<h2>File: app/Models/User.php</h2>
+<h3>Class: User</h3>
+<h4>Methods</h4>
+<ul><li><b>casts</b><pre>/**
+     * Get the attributes that should be cast.
+     *
+     * @return array&lt;string, string&gt;
+     */</pre></li>
+</ul>
+<h2>File: app/Models/Source.php</h2>
+<h3>Class: Source</h3>
+<h4>Methods</h4>
+<ul><li><b>articles</b></li>
+</ul>
+<h3>Class: UNKNOWN</h3>
+<h2>File: app/Models/Author.php</h2>
+<h3>Class: Author</h3>
+<h4>Methods</h4>
+<ul><li><b>articles</b></li>
+</ul>
+<h3>Class: UNKNOWN</h3>
+<h2>File: app/Models/Article.php</h2>
+<h3>Class: Article</h3>
+<pre>/**
+ * Article model representing a normalized article stored locally.
+ *
+ * @property int $id
+ * @property int $source_id
+ * @property string|null $external_id
+ * @property string $title
+ * @property string|null $excerpt
+ * @property string|null $body
+ * @property string|null $url
+ * @property string|null $image_url
+ * @property \Illuminate\Support\Carbon|null $published_at
+ * @property array|null $raw_json
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>source</b></li>
+</ul>
+<h3>Class: category</h3>
+<h4>Methods</h4>
+<ul><li><b>category</b></li>
+</ul>
+<h3>Class: author</h3>
+<h4>Methods</h4>
+<ul><li><b>author</b></li>
+</ul>
+<h3>Class: UNKNOWN</h3>
+<h2>File: app/Http/Resources/UserPreferenceResource.php</h2>
+<h3>Class: UserPreferenceResource</h3>
+<h4>Methods</h4>
+<ul><li><b>toArray</b></li>
+</ul>
+<h2>File: app/Http/Resources/AuthorResource.php</h2>
+<h3>Class: AuthorResource</h3>
+<h4>Methods</h4>
+<ul><li><b>toArray</b></li>
+</ul>
+<h2>File: app/Http/Resources/ArticleResource.php</h2>
+<h3>Class: ArticleResource</h3>
+<h4>Methods</h4>
+<ul><li><b>toArray</b></li>
+</ul>
+<h2>File: app/Http/Controllers/Controller.php</h2>
+<h3>Class: Controller</h3>
+<h2>File: app/Http/Controllers/Api/AuthorController.php</h2>
+<h3>Class: AuthorController</h3>
+<h4>Methods</h4>
+<ul><li><b>index</b><pre>/**
+     * List authors (paginated)
+     */</pre></li>
+<li><b>show</b><pre>/**
+     * Show a specific author
+     */</pre></li>
+</ul>
+<h2>File: app/Http/Controllers/Api/AuthController.php</h2>
+<h3>Class: AuthController</h3>
+<pre>/**
+ * Simple auth controller providing register/login/logout endpoints using
+ * Sanctum personal access tokens.
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>register</b><pre>/**
+     * Register a new user and return a personal access token (201).
+     */</pre></li>
+<li><b>login</b><pre>/**
+     * Login and return a personal access token.
+     */</pre></li>
+<li><b>logout</b><pre>/**
+     * Revoke the current token.
+     */</pre></li>
+</ul>
+<h2>File: app/Http/Controllers/Api/UserPreferenceController.php</h2>
+<h3>Class: UserPreferenceController</h3>
+<pre>/**
+ * Controller for managing a user&#039;s reading preferences (selected sources,
+ * categories and authors). All endpoints require authentication via
+ * sanctum (`auth:sanctum` middleware applied in routes).
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>index</b><pre>/**
+     * Return the authenticated user&#039;s preferences or null if none exist.
+     */</pre></li>
+<li><b>store</b><pre>/**
+     * Create or replace the authenticated user&#039;s preferences.
+     */</pre></li>
+<li><b>update</b><pre>/**
+     * Update the authenticated user&#039;s options (partial update allowed).
+     */</pre></li>
+<li><b>destroy</b><pre>/**
+     * Remove the user&#039;s stored preferences.
+     */</pre></li>
+</ul>
+<h2>File: app/Http/Controllers/Api/ArticleController.php</h2>
+<h3>Class: ArticleController</h3>
+<pre>/**
+ * API controller for listing and showing articles.
+ *
+ * Query params supported for `index`:
+ *  - q: full text query (title/excerpt)
+ *  - source: source slug
+ *  - category: category slug
+ *  - from, to: date range for published_at
+ *  - per_page: pagination size
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>index</b><pre>/**
+     * List articles with optional filtering and pagination.
+     * Returns a paginated collection of ArticleResource.
+     */</pre></li>
+<li><b>where</b></li>
+<li><b>where</b></li>
+<li><b>where</b></li>
+<li><b>show</b><pre>/**
+     * Show an individual article by id.
+     *
+     * @param int|string $id
+     */</pre></li>
+</ul>
+<h2>File: app/Http/Controllers/Api/DocsController.php</h2>
+<h3>Class: DocsController</h3>
+<h4>Methods</h4>
+<ul><li><b>openapi</b></li>
+<li><b>ui</b><pre>/**
+         * Serve a minimal Swagger UI page that points to the openapi.json spec.
+         */</pre></li>
+</ul>
+<h2>File: app/Http/Controllers/Api/HealthController.php</h2>
+<h3>Class: HealthController</h3>
+<h4>Methods</h4>
+<ul><li><b>index</b></li>
+</ul>
+<h2>File: app/Jobs/FetchSourceJob.php</h2>
+<h3>Class: FetchSourceJob</h3>
+<pre>/**
+ * Job responsible for fetching articles from a given Source and storing
+ * them in the database. The job is intentionally small and delegates:
+ *  - fetching to the source-specific adapter (AdapterFactory)
+ *  - normalization to ArticleNormalizationService
+ *  - duplication detection to DeduplicationService
+ *
+ * The job will merge incoming data into existing articles when duplicates
+ * are detected to avoid storing redundant entries.
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>__construct</b></li>
+<li><b>handle</b></li>
+</ul>
+<h2>File: app/Services/Integrations/NewsApiAdapter.php</h2>
+<h3>Class: NewsApiAdapter</h3>
+<pre>/**
+ * Adapter for the NewsAPI.org service. Responsible for calling the
+ * top-headlines endpoint and returning a Collection of raw article items.
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>__construct</b></li>
+<li><b>fetchTopHeadlines</b><pre>/**
+     * Fetch top headlines from NewsAPI.
+     *
+     * @param array $params Query parameters (country, category, q, sources, pageSize, etc.)
+     * @return Collection&lt;int, array&gt;
+     */</pre></li>
+</ul>
+<h2>File: app/Services/Integrations/AdapterFactory.php</h2>
+<h3>Class: AdapterFactory</h3>
+<pre>/**
+ * Simple factory that returns an adapter instance for a given Source model.
+ * Returns null when no adapter is available for the provided source slug.
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>forSource</b><pre>/**
+     * @param Source $source
+     * @return \App\Services\Integrations\NewsApiAdapter|\App\Services\Integrations\GuardianAdapter|\App\Services\Integrations\NytAdapter|null
+     */</pre></li>
+</ul>
+<h2>File: app/Services/Integrations/GuardianAdapter.php</h2>
+<h3>Class: GuardianAdapter</h3>
+<pre>/**
+ * Adapter for The Guardian content API. Returns search results as a Collection
+ * of raw article result objects.
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>__construct</b></li>
+<li><b>fetchTopHeadlines</b><pre>/**
+     * Fetch headlines/results from The Guardian search endpoint.
+     *
+     * @param array $params Query params (q, section, pageSize, etc.)
+     * @return Collection&lt;int, array&gt;
+     */</pre></li>
+</ul>
+<h2>File: app/Services/Integrations/NytAdapter.php</h2>
+<h3>Class: NytAdapter</h3>
+<pre>/**
+ * Adapter for New York Times APIs (topstories). Returns results as a
+ * Collection of raw article objects.
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>__construct</b></li>
+<li><b>fetchTopHeadlines</b><pre>/**
+     * Fetch top stories from NYT topstories endpoint.
+     *
+     * @param array $params [&#039;section&#039; =&gt; &#039;home&#039;|&#039;world&#039;|...]
+     * @return Collection&lt;int, array&gt;
+     */</pre></li>
+</ul>
+<h2>File: app/Services/ArticleNormalizationService.php</h2>
+<h3>Class: ArticleNormalizationService</h3>
+<pre>/**
+ * Service responsible for normalizing provider-specific article payloads
+ * into the application&#039;s canonical Article shape.
+ *
+ * Each `normalizeFrom*` method accepts the raw API response item and
+ * returns an associative array with keys matching the Article fillable
+ * attributes (external_id, title, excerpt, body, url, image_url,
+ * published_at, raw_json).
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>normalizeFromNewsApi</b><pre>/**
+     * Normalize a NewsAPI article payload.
+     *
+     * @param array $item Raw NewsAPI article array
+     * @return array Normalized article data
+     */</pre></li>
+<li><b>normalizeFromGuardian</b><pre>/**
+     * Normalize a The Guardian article payload.
+     *
+     * @param array $item Raw Guardian article array
+     * @return array Normalized article data
+     */</pre></li>
+<li><b>normalizeFromNyt</b><pre>/**
+     * Normalize a New York Times article payload.
+     *
+     * @param array $item Raw NYT article array
+     * @return array Normalized article data
+     */</pre></li>
+<li><b>extractNytImage</b><pre>/**
+     * Extract the first image URL from an NYT multimedia block if present.
+     *
+     * @param array $item Raw NYT article array
+     * @return string|null
+     */</pre></li>
+<li><b>generateExternalId</b><pre>/**
+     * Generate a stable external_id for items that lack a provider id.
+     * Uses source id + title when available or an MD5 of the filtered payload.
+     *
+     * @param array $item
+     * @return string
+     */</pre></li>
+</ul>
+<h2>File: app/Services/DeduplicationService.php</h2>
+<h3>Class: DeduplicationService</h3>
+<pre>/**
+ * Small service that detects duplicates among Article records.
+ *
+ * Detection strategies (in order):
+ *  - exact match by source_id + external_id
+ *  - normalized URL match
+ *  - fuzzy title match (levenshtein threshold)
+ */</pre>
+<h4>Methods</h4>
+<ul><li><b>findDuplicate</b><pre>/**
+     * Return the matching Article model if a duplicate is found, or null.
+     *
+     * @param array $candidate Candidate article data (must include url/title/external_id/source_id as available)
+     * @return Article|null
+     */</pre></li>
+<li><b>Str</b></li>
+<li><b>isDuplicate</b><pre>/**
+     * Convenience boolean wrapper for findDuplicate().
+     *
+     * @param array $candidate
+     * @return bool
+     */</pre></li>
+<li><b>normalizeUrl</b><pre>/**
+     * Normalize a URL for basic comparison (strip scheme &amp; trailing slash).
+     *
+     * @param string $url
+     * @return string
+     */</pre></li>
+</ul>
+<h2>File: app/Console/Commands/FetchArticlesCommand.php</h2>
+<h3>Class: FetchArticlesCommand</h3>
+<h4>Methods</h4>
+<ul><li><b>handle</b></li>
+</ul>
+<h2>File: app/Console/Kernel.php</h2>
+<h3>Class: Kernel</h3>
+<h4>Methods</h4>
+<ul><li><b>schedule</b></li>
+<li><b>commands</b></li>
+</ul>
+</body></html>

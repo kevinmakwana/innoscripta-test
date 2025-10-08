@@ -1,0 +1,10 @@
+services:
+  app:
+    # Build the `dev` target in CI so the image includes the vendor/ tree
+    # created in the build stage and copied in the dev stage. The final
+    # (prod) stage doesn't include vendor, so we explicitly build `dev`.
+    build:
+      target: dev
+    # Remove host volume mounts in CI so the image-provided vendor/ (and other
+    # build artifacts) are not hidden by the mounted repository.
+    volumes: []

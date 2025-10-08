@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="/var/www/html/phpunit.xml" tests="67" assertions="391" errors="0" failures="0" skipped="0" time="1.733188">
+    <testsuite name="Unit" tests="21" assertions="98" errors="0" failures="0" skipped="0" time="1.045866">
+      <testsuite name="Tests\Unit\ArticleNormalizationEdgeCaseTest" file="/var/www/html/tests/Unit/ArticleNormalizationEdgeCaseTest.php" tests="2" assertions="9" errors="0" failures="0" skipped="0" time="0.131417">
+        <testcase name="test_normalize_handles_missing_author_and_category" file="/var/www/html/tests/Unit/ArticleNormalizationEdgeCaseTest.php" line="11" class="Tests\Unit\ArticleNormalizationEdgeCaseTest" classname="Tests.Unit.ArticleNormalizationEdgeCaseTest" assertions="5" time="0.126771"/>
+        <testcase name="test_normalize_nyt_handles_empty_multimedia" file="/var/www/html/tests/Unit/ArticleNormalizationEdgeCaseTest.php" line="35" class="Tests\Unit\ArticleNormalizationEdgeCaseTest" classname="Tests.Unit.ArticleNormalizationEdgeCaseTest" assertions="4" time="0.004646"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\ArticleNormalizationStrictTest" file="/var/www/html/tests/Unit/ArticleNormalizationStrictTest.php" tests="3" assertions="43" errors="0" failures="0" skipped="0" time="0.011592">
+        <testcase name="test_normalize_from_newsapi_returns_expected_shape" file="/var/www/html/tests/Unit/ArticleNormalizationStrictTest.php" line="11" class="Tests\Unit\ArticleNormalizationStrictTest" classname="Tests.Unit.ArticleNormalizationStrictTest" assertions="16" time="0.004279"/>
+        <testcase name="test_normalize_from_guardian_returns_expected_shape" file="/var/www/html/tests/Unit/ArticleNormalizationStrictTest.php" line="47" class="Tests\Unit\ArticleNormalizationStrictTest" classname="Tests.Unit.ArticleNormalizationStrictTest" assertions="14" time="0.003712"/>
+        <testcase name="test_normalize_from_nyt_returns_expected_shape" file="/var/www/html/tests/Unit/ArticleNormalizationStrictTest.php" line="83" class="Tests\Unit\ArticleNormalizationStrictTest" classname="Tests.Unit.ArticleNormalizationStrictTest" assertions="13" time="0.003601"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\ArticleNormalizationTest" file="/var/www/html/tests/Unit/ArticleNormalizationTest.php" tests="3" assertions="18" errors="0" failures="0" skipped="0" time="0.000418">
+        <testcase name="test_normalize_from_newsapi_includes_author_and_category_candidates" file="/var/www/html/tests/Unit/ArticleNormalizationTest.php" line="10" class="Tests\Unit\ArticleNormalizationTest" classname="Tests.Unit.ArticleNormalizationTest" assertions="6" time="0.000302"/>
+        <testcase name="test_normalize_from_guardian_includes_author_and_category_candidates" file="/var/www/html/tests/Unit/ArticleNormalizationTest.php" line="37" class="Tests\Unit\ArticleNormalizationTest" classname="Tests.Unit.ArticleNormalizationTest" assertions="6" time="0.000046"/>
+        <testcase name="test_normalize_from_nyt_includes_author_and_category_candidates" file="/var/www/html/tests/Unit/ArticleNormalizationTest.php" line="61" class="Tests\Unit\ArticleNormalizationTest" classname="Tests.Unit.ArticleNormalizationTest" assertions="6" time="0.000071"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\DeduplicationServiceTest" file="/var/www/html/tests/Unit/DeduplicationServiceTest.php" tests="3" assertions="3" errors="0" failures="0" skipped="0" time="0.812012">
+        <testcase name="test_detects_duplicate_by_external_id" file="/var/www/html/tests/Unit/DeduplicationServiceTest.php" line="14" class="Tests\Unit\DeduplicationServiceTest" classname="Tests.Unit.DeduplicationServiceTest" assertions="1" time="0.793205"/>
+        <testcase name="test_detects_duplicate_by_url_normalization" file="/var/www/html/tests/Unit/DeduplicationServiceTest.php" line="23" class="Tests\Unit\DeduplicationServiceTest" classname="Tests.Unit.DeduplicationServiceTest" assertions="1" time="0.010221"/>
+        <testcase name="test_detects_duplicate_by_similar_title" file="/var/www/html/tests/Unit/DeduplicationServiceTest.php" line="32" class="Tests\Unit\DeduplicationServiceTest" classname="Tests.Unit.DeduplicationServiceTest" assertions="1" time="0.008586"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\ExampleTest" file="/var/www/html/tests/Unit/ExampleTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.000053">
+        <testcase name="test_that_true_is_true" file="/var/www/html/tests/Unit/ExampleTest.php" line="12" class="Tests\Unit\ExampleTest" classname="Tests.Unit.ExampleTest" assertions="1" time="0.000053"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\FetchMergeTest" file="/var/www/html/tests/Unit/FetchMergeTest.php" tests="1" assertions="7" errors="0" failures="0" skipped="0" time="0.010758">
+        <testcase name="test_merge_updates_existing_article" file="/var/www/html/tests/Unit/FetchMergeTest.php" line="15" class="Tests\Unit\FetchMergeTest" classname="Tests.Unit.FetchMergeTest" assertions="7" time="0.010758"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\GuardianAdapterTest" file="/var/www/html/tests/Unit/GuardianAdapterTest.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.019218">
+        <testcase name="test_fetch_top_headlines_returns_collection" file="/var/www/html/tests/Unit/GuardianAdapterTest.php" line="11" class="Tests\Unit\GuardianAdapterTest" classname="Tests.Unit.GuardianAdapterTest" assertions="2" time="0.019218"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\HttpRetryMiddlewarePublicContractTest" file="/var/www/html/tests/Unit/HttpRetryMiddlewarePublicContractTest.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.012106">
+        <testcase name="test_http_withRetry_retries_and_dispatches_events" file="/var/www/html/tests/Unit/HttpRetryMiddlewarePublicContractTest.php" line="13" class="Tests\Unit\HttpRetryMiddlewarePublicContractTest" classname="Tests.Unit.HttpRetryMiddlewarePublicContractTest" assertions="2" time="0.012106"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\Integrations\NewsApiAdapterTest" file="/var/www/html/tests/Unit/Integrations/NewsApiAdapterTest.php" tests="2" assertions="4" errors="0" failures="0" skipped="0" time="0.012708">
+        <testcase name="test_fetchTopHeadlines_returns_collection_when_api_ok" file="/var/www/html/tests/Unit/Integrations/NewsApiAdapterTest.php" line="15" class="Tests\Unit\Integrations\NewsApiAdapterTest" classname="Tests.Unit.Integrations.NewsApiAdapterTest" assertions="2" time="0.007290"/>
+        <testcase name="test_fetchTopHeadlines_returns_empty_when_no_key" file="/var/www/html/tests/Unit/Integrations/NewsApiAdapterTest.php" line="33" class="Tests\Unit\Integrations\NewsApiAdapterTest" classname="Tests.Unit.Integrations.NewsApiAdapterTest" assertions="2" time="0.005418"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\NewsApiAdapterRetryCountTest" file="/var/www/html/tests/Unit/NewsApiAdapterRetryCountTest.php" tests="1" assertions="3" errors="0" failures="0" skipped="0" time="0.009931">
+        <testcase name="test_retry_attempts_are_made_on_transient_failures" file="/var/www/html/tests/Unit/NewsApiAdapterRetryCountTest.php" line="11" class="Tests\Unit\NewsApiAdapterRetryCountTest" classname="Tests.Unit.NewsApiAdapterRetryCountTest" assertions="3" time="0.009931"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\NewsApiAdapterTest" file="/var/www/html/tests/Unit/NewsApiAdapterTest.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.004556">
+        <testcase name="test_fetch_top_headlines_returns_collection" file="/var/www/html/tests/Unit/NewsApiAdapterTest.php" line="11" class="Tests\Unit\NewsApiAdapterTest" classname="Tests.Unit.NewsApiAdapterTest" assertions="2" time="0.004556"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\NytAdapterRetryTest" file="/var/www/html/tests/Unit/NytAdapterRetryTest.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.016560">
+        <testcase name="test_fetchTopHeadlines_handles_transient_failure_and_returns_empty" file="/var/www/html/tests/Unit/NytAdapterRetryTest.php" line="11" class="Tests\Unit\NytAdapterRetryTest" classname="Tests.Unit.NytAdapterRetryTest" assertions="2" time="0.016560"/>
+      </testsuite>
+      <testsuite name="Tests\Unit\NytAdapterTest" file="/var/www/html/tests/Unit/NytAdapterTest.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.004537">
+        <testcase name="test_fetch_top_headlines_returns_collection" file="/var/www/html/tests/Unit/NytAdapterTest.php" line="11" class="Tests\Unit\NytAdapterTest" classname="Tests.Unit.NytAdapterTest" assertions="2" time="0.004537"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="Feature" tests="46" assertions="293" errors="0" failures="0" skipped="0" time="0.687322">
+      <testsuite name="Tests\Feature\ArticleEndpointsTest" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" tests="11" assertions="139" errors="0" failures="0" skipped="0" time="0.191639">
+        <testcase name="it_can_list_articles" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="46" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="91" time="0.047738"/>
+        <testcase name="it_can_show_single_article" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="80" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="20" time="0.011623"/>
+        <testcase name="it_returns_404_for_non_existent_article" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="114" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="1" time="0.013098"/>
+        <testcase name="it_can_search_articles_by_query" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="122" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="2" time="0.013489"/>
+        <testcase name="it_can_filter_articles_by_source" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="147" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="2" time="0.014421"/>
+        <testcase name="it_can_filter_articles_by_category" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="161" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="2" time="0.018591"/>
+        <testcase name="it_can_filter_articles_by_author" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="182" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="4" time="0.015161"/>
+        <testcase name="it_can_filter_articles_by_date_range" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="208" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="2" time="0.014582"/>
+        <testcase name="it_can_paginate_articles" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="233" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="9" time="0.018944"/>
+        <testcase name="it_can_combine_multiple_filters" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="257" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="3" time="0.012464"/>
+        <testcase name="it_orders_articles_by_published_date_desc_by_default" file="/var/www/html/tests/Feature/ArticleEndpointsTest.php" line="285" class="Tests\Feature\ArticleEndpointsTest" classname="Tests.Feature.ArticleEndpointsTest" assertions="3" time="0.011527"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\AuthorEndpointsTest" file="/var/www/html/tests/Feature/AuthorEndpointsTest.php" tests="1" assertions="4" errors="0" failures="0" skipped="0" time="0.011278">
+        <testcase name="test_authors_index_and_show" file="/var/www/html/tests/Feature/AuthorEndpointsTest.php" line="13" class="Tests\Feature\AuthorEndpointsTest" classname="Tests.Feature.AuthorEndpointsTest" assertions="4" time="0.011278"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\AuthorTest" file="/var/www/html/tests/Feature/AuthorTest.php" tests="2" assertions="6" errors="0" failures="0" skipped="0" time="0.022544">
+        <testcase name="test_index_returns_paginated_authors" file="/var/www/html/tests/Feature/AuthorTest.php" line="13" class="Tests\Feature\AuthorTest" classname="Tests.Feature.AuthorTest" assertions="4" time="0.014110"/>
+        <testcase name="test_show_returns_author" file="/var/www/html/tests/Feature/AuthorTest.php" line="23" class="Tests\Feature\AuthorTest" classname="Tests.Feature.AuthorTest" assertions="2" time="0.008435"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\CategoryEndpointsTest" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" tests="16" assertions="91" errors="0" failures="0" skipped="0" time="0.223765">
+        <testcase name="it_can_list_all_categories" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="29" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="34" time="0.011830"/>
+        <testcase name="it_can_list_categories_with_pagination" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="53" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="10" time="0.014767"/>
+        <testcase name="it_can_search_categories_by_name" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="76" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="2" time="0.010644"/>
+        <testcase name="it_can_show_single_category" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="89" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="9" time="0.014233"/>
+        <testcase name="it_returns_404_for_non_existent_category" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="119" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="1" time="0.014385"/>
+        <testcase name="authenticated_user_can_create_category" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="127" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="3" time="0.027321"/>
+        <testcase name="it_auto_generates_unique_slug_when_creating_category" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="152" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="2" time="0.013051"/>
+        <testcase name="it_validates_category_creation_data" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="172" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="6" time="0.011315"/>
+        <testcase name="unauthenticated_user_cannot_create_category" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="189" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="1" time="0.011584"/>
+        <testcase name="authenticated_user_can_update_category" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="197" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="3" time="0.013339"/>
+        <testcase name="authenticated_user_can_delete_empty_category" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="228" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="3" time="0.011529"/>
+        <testcase name="cannot_delete_category_with_articles" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="245" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="3" time="0.011867"/>
+        <testcase name="it_can_get_articles_for_category" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="269" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="5" time="0.015596"/>
+        <testcase name="it_can_search_articles_within_category" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="297" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="3" time="0.015178"/>
+        <testcase name="it_can_filter_category_articles_by_date" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="321" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="2" time="0.015338"/>
+        <testcase name="categories_are_ordered_by_name" file="/var/www/html/tests/Feature/CategoryEndpointsTest.php" line="344" class="Tests\Feature\CategoryEndpointsTest" classname="Tests.Feature.CategoryEndpointsTest" assertions="4" time="0.011790"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\ExampleTest" file="/var/www/html/tests/Feature/ExampleTest.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.013207">
+        <testcase name="test_the_application_returns_a_successful_response" file="/var/www/html/tests/Feature/ExampleTest.php" line="13" class="Tests\Feature\ExampleTest" classname="Tests.Feature.ExampleTest" assertions="1" time="0.013207"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\FetchSourceJobFailureTest" file="/var/www/html/tests/Feature/FetchSourceJobFailureTest.php" tests="2" assertions="3" errors="0" failures="0" skipped="0" time="0.033574">
+        <testcase name="test_adapter_exception_dispatches_source_fetch_failed_event" file="/var/www/html/tests/Feature/FetchSourceJobFailureTest.php" line="17" class="Tests\Feature\FetchSourceJobFailureTest" classname="Tests.Feature.FetchSourceJobFailureTest" assertions="1" time="0.017164"/>
+        <testcase name="test_per_item_exception_dispatches_and_continues_processing" file="/var/www/html/tests/Feature/FetchSourceJobFailureTest.php" line="38" class="Tests\Feature\FetchSourceJobFailureTest" classname="Tests.Feature.FetchSourceJobFailureTest" assertions="2" time="0.016410"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\FetchSourceJobTest" file="/var/www/html/tests/Feature/FetchSourceJobTest.php" tests="1" assertions="6" errors="0" failures="0" skipped="0" time="0.009837">
+        <testcase name="test_job_persists_author_category_and_article" file="/var/www/html/tests/Feature/FetchSourceJobTest.php" line="17" class="Tests\Feature\FetchSourceJobTest" classname="Tests.Feature.FetchSourceJobTest" assertions="6" time="0.009837"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\HealthTest" file="/var/www/html/tests/Feature/HealthTest.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.005909">
+        <testcase name="test_health_endpoint_returns_ok" file="/var/www/html/tests/Feature/HealthTest.php" line="9" class="Tests\Feature\HealthTest" classname="Tests.Feature.HealthTest" assertions="2" time="0.005909"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\OpenApiSpecTest" file="/var/www/html/tests/Feature/OpenApiSpecTest.php" tests="1" assertions="2" errors="0" failures="0" skipped="0" time="0.004792">
+        <testcase name="openapi_json_is_valid_json" file="/var/www/html/tests/Feature/OpenApiSpecTest.php" line="11" class="Tests\Feature\OpenApiSpecTest" classname="Tests.Feature.OpenApiSpecTest" assertions="2" time="0.004792"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\PersonalizedArticlesTest" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" tests="9" assertions="32" errors="0" failures="0" skipped="0" time="0.153359">
+        <testcase name="unauthenticated_user_cannot_access_personalized_articles" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" line="44" class="Tests\Feature\PersonalizedArticlesTest" classname="Tests.Feature.PersonalizedArticlesTest" assertions="1" time="0.010818"/>
+        <testcase name="authenticated_user_without_preferences_gets_all_articles" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" line="52" class="Tests\Feature\PersonalizedArticlesTest" classname="Tests.Feature.PersonalizedArticlesTest" assertions="2" time="0.021979"/>
+        <testcase name="it_filters_articles_by_preferred_sources" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" line="67" class="Tests\Feature\PersonalizedArticlesTest" classname="Tests.Feature.PersonalizedArticlesTest" assertions="5" time="0.025478"/>
+        <testcase name="it_filters_articles_by_preferred_categories" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" line="95" class="Tests\Feature\PersonalizedArticlesTest" classname="Tests.Feature.PersonalizedArticlesTest" assertions="4" time="0.019100"/>
+        <testcase name="it_filters_articles_by_preferred_authors" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" line="130" class="Tests\Feature\PersonalizedArticlesTest" classname="Tests.Feature.PersonalizedArticlesTest" assertions="4" time="0.013497"/>
+        <testcase name="it_combines_multiple_preference_types" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" line="165" class="Tests\Feature\PersonalizedArticlesTest" classname="Tests.Feature.PersonalizedArticlesTest" assertions="2" time="0.013601"/>
+        <testcase name="it_allows_additional_filtering_on_personalized_results" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" line="210" class="Tests\Feature\PersonalizedArticlesTest" classname="Tests.Feature.PersonalizedArticlesTest" assertions="4" time="0.013811"/>
+        <testcase name="it_paginates_personalized_articles" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" line="247" class="Tests\Feature\PersonalizedArticlesTest" classname="Tests.Feature.PersonalizedArticlesTest" assertions="7" time="0.021442"/>
+        <testcase name="it_orders_personalized_articles_by_published_date_desc" file="/var/www/html/tests/Feature/PersonalizedArticlesTest.php" line="278" class="Tests\Feature\PersonalizedArticlesTest" classname="Tests.Feature.PersonalizedArticlesTest" assertions="3" time="0.013633"/>
+      </testsuite>
+      <testsuite name="Tests\Feature\UserPreferenceTest" file="/var/www/html/tests/Feature/UserPreferenceTest.php" tests="1" assertions="7" errors="0" failures="0" skipped="0" time="0.017418">
+        <testcase name="test_crud_preferences" file="/var/www/html/tests/Feature/UserPreferenceTest.php" line="13" class="Tests\Feature\UserPreferenceTest" classname="Tests.Feature.UserPreferenceTest" assertions="7" time="0.017418"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

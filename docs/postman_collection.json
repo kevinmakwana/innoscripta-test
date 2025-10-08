@@ -1,0 +1,262 @@
+{
+  "info": {
+    "name": "News Aggregator API",
+    "description": "Postman collection for the News Aggregator API (import into Postman). Replace {{base_url}} with http://localhost:8000/api/v1 and add an environment variable for bearer token if needed.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      }
+      ,
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Save token to environment for use in other requests",
+              "try {",
+              "  var json = pm.response.json();",
+              "  var token = json.token || (json.data && json.data.token) || json.access_token || json.token_type && json.access_token || null;",
+              "  if (token) {",
+              "    pm.environment.set('auth_token', token);",
+              "    console.log('auth_token set');",
+              "  } else {",
+              "    console.log('No token found in response');",
+              "  }",
+              "} catch (e) { console.log('Could not parse login response', e); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List Articles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/articles?per_page=10",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "articles"
+          ],
+          "query": [
+            {
+              "key": "per_page",
+              "value": "10"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List Articles - Search & Filters",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/articles?q=technology&source=newsapi&category=technology&from=2025-09-01&to=2025-10-07&per_page=10",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "articles"
+          ],
+          "query": [
+            { "key": "q", "value": "technology" },
+            { "key": "source", "value": "newsapi" },
+            { "key": "category", "value": "technology" },
+            { "key": "from", "value": "2025-09-01" },
+            { "key": "to", "value": "2025-10-07" },
+            { "key": "per_page", "value": "10" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Authors",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/authors",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "authors"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Categories",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/categories",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "categories"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Preferences (Auth)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{auth_token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/preferences",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": ["preferences"]
+        }
+      }
+    },
+    {
+      "name": "Update Preferences (Auth)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json", "type": "text" },
+          { "key": "Authorization", "value": "Bearer {{auth_token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sources\": [1,2],\n  \"categories\": [\"technology\"],\n  \"authors\": []\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/preferences",
+          "host": ["{{base_url}}"],
+          "path": ["preferences"]
+        }
+      }
+    },
+    {
+      "name": "Personalized Articles (Auth)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/articles/personalized?per_page=5",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "articles",
+            "personalized"
+          ],
+          "query": [
+            {
+              "key": "per_page",
+              "value": "5"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// If auth_token exists in environment, set Authorization header for the request",
+          "(function() {",
+          "  try {",
+          "    var token = pm.environment.get('auth_token');",
+          "    if (token) {",
+          "      pm.request.headers.upsert({ key: 'Authorization', value: 'Bearer ' + token });",
+          "    }",
+          "  } catch (e) { console.log('pre-request script error', e); }",
+          "})();"
+        ]
+      }
+    }
+  ]
+}

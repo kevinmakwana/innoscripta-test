@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Simple pre-commit hook: validate docs/openapi.json syntax and semantics (if node available)
+set -e
+FILE="docs/openapi.json"
+
+if command -v npx >/dev/null 2>&1; then
+  echo "Running openapi semantic validation via npx @redocly/openapi-cli..."
+  npx --yes @redocly/openapi-cli validate "$FILE"
+else
+  echo "npx not found; falling back to PHP JSON syntax check"
+  php -r "json_decode(file_get_contents('$FILE')); if (json_last_error() !== JSON_ERROR_NONE) { echo 'JSON error: ' . json_last_error_msg() . '\n'; exit(1);}"
+fi
+
+exit 0

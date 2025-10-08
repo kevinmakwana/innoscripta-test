@@ -1,0 +1,20 @@
+includes:
+  - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+  level: 7
+  paths:
+    - app
+  ignoreErrors:
+    - '#Call to an undefined static method App\\Models\\.*::#'
+    - '#Access to an undefined property App\\Models\\.*#'
+    - '#Call to an undefined static method Illuminate\\Support\\Facades\\Http::withRetry#'
+    - '#Call to an undefined method App\\Providers\\RouteServiceProvider::routes\(\)#'
+    - '#Access to an undefined property App\\Http\\Resources\\.*#'
+    - '#Call to an undefined static method Illuminate\\Support\\Facades\\Redis::#'
+    - '#Access to internal property PhpAmqpLib\\Message\\AMQPMessage::\$delivery_info from outside its root namespace PhpAmqpLib#'
+    - '#Class App\\Models\\.* uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types: TFactory#'
+    - '#return type with generic class Illuminate\\Database\\Eloquent\\Relations\\.* does not specify its types:#'
+    - '#Unable to resolve the template type TKey in call to function collect#'
+    - '#Unable to resolve the template type TValue in call to function collect#'
+    - '#return type has no value type specified in iterable type array#'
