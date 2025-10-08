@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Http;
 use App\Services\Integrations\NytAdapter;
+use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
 
 class NytAdapterTest extends TestCase
 {
@@ -12,12 +12,12 @@ class NytAdapterTest extends TestCase
     {
         Http::fake([
             'https://api.nytimes.com/*' => Http::response(['results' => [
-                ['title' => 'NYT Test']
-            ]], 200)
+                ['title' => 'NYT Test'],
+            ]], 200),
         ]);
 
-    config()->set('news.nyt.key', 'test');
-    $adapter = new NytAdapter();
+        config()->set('news.nyt.key', 'test');
+        $adapter = new NytAdapter;
         $collection = $adapter->fetchTopHeadlines();
 
         $this->assertCount(1, $collection);

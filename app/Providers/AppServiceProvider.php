@@ -1,17 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
-use App\Events\HttpRetryEvent;
 use App\Contracts\MessageBrokerInterface;
-use App\Services\Messaging\RedisMessageBroker;
+use App\Events\HttpRetryEvent;
 use App\Services\Integrations\AdapterResolver;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,17 +33,17 @@ class AppServiceProvider extends ServiceProvider
 
         // Bind MessageBrokerInterface
         $this->app->singleton(\App\Contracts\MessageBrokerInterface::class, function ($app) {
-            return new \App\Services\Messaging\RedisMessageBroker();
+            return new \App\Services\Messaging\RedisMessageBroker;
         });
 
         // Bind a MetricsClientInterface. Prefer a StatsD-backed client when
         // a 'statsd' binding exists in the container, otherwise use Redis.
         $this->app->bind(\App\Contracts\MetricsClientInterface::class, function ($app) {
             if ($app->bound('statsd')) {
-                return new \App\Services\Metrics\StatsDClient();
+                return new \App\Services\Metrics\StatsDClient;
             }
 
-            return new \App\Services\Metrics\RedisMetricsClient();
+            return new \App\Services\Metrics\RedisMetricsClient;
         });
     }
 
@@ -54,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
+
         // Register a macro that returns a small client wrapper which performs
         // manual retries using the Http facade. We do manual retries so that
         // Http::fakeSequence works deterministically in tests and so we can
@@ -64,12 +62,17 @@ class AppServiceProvider extends ServiceProvider
             $baseSleepMs = $baseSleepMs ?? (int) config('news.newsapi.retry_sleep_ms', 100);
             $maxSleepMs = $maxSleepMs ?? (int) config('news.newsapi.retry_max_sleep_ms', 2000);
 
-            return new class($attempts, $baseSleepMs, $maxSleepMs) {
+            return new class($attempts, $baseSleepMs, $maxSleepMs)
+            {
                 protected int $attempts;
+
                 protected int $baseSleepMs;
+
                 protected int $maxSleepMs;
+
                 /** @var array<string,string> */
                 protected array $headers = [];
+
                 protected ?int $timeout = null;
 
                 public function __construct(int $attempts, int $baseSleepMs, int $maxSleepMs)
@@ -82,22 +85,22 @@ class AppServiceProvider extends ServiceProvider
                 public function timeout(int $seconds): self
                 {
                     $this->timeout = $seconds;
+
                     return $this;
                 }
 
                 /**
-                 * @param array<string,string> $headers
+                 * @param  array<string,string>  $headers
                  */
                 public function withHeaders(array $headers): self
                 {
                     $this->headers = array_merge($this->headers, $headers);
+
                     return $this;
                 }
 
                 /**
                  * Build a PendingRequest with configured headers and timeout.
-                 *
-                 * @return \Illuminate\Http\Client\PendingRequest
                  */
                 protected function buildRequest(): \Illuminate\Http\Client\PendingRequest
                 {
@@ -105,13 +108,12 @@ class AppServiceProvider extends ServiceProvider
                     if (! is_null($this->timeout)) {
                         $req = $req->timeout($this->timeout);
                     }
+
                     return $req;
                 }
 
                 /**
-                 * @param string $url
-                 * @param array<string,mixed> $query
-                 * @return \Illuminate\Http\Client\Response|null
+                 * @param  array<string,mixed>  $query
                  */
                 public function get(string $url, array $query = []): ?\Illuminate\Http\Client\Response
                 {
@@ -131,6 +133,7 @@ class AppServiceProvider extends ServiceProvider
                             if ($status >= 500 && $attempt < $this->attempts) {
                                 $sleepMs = min($this->maxSleepMs, $this->baseSleepMs * (2 ** ($attempt - 1)) + random_int(0, $this->baseSleepMs));
                                 usleep($sleepMs * 1000);
+
                                 continue;
                             }
 
@@ -159,8 +162,8 @@ class AppServiceProvider extends ServiceProvider
                 /**
                  * Forward unknown calls to the Http facade.
                  *
-                 * @param string $name
-                 * @param array<mixed> $arguments
+                 * @param  string  $name
+                 * @param  array<mixed>  $arguments
                  * @return mixed
                  */
                 public function __call($name, $arguments)

@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -50,7 +51,7 @@ class AuthController extends Controller
         $user = User::where('email', $data['email'])->first();
 
         if (! $user || ! Hash::check($data['password'], $user->password)) {
-            return response()->json(['message' => 'Invalid credentials', 'data' => new \stdClass()], 401);
+            return response()->json(['message' => 'Invalid credentials', 'data' => new \stdClass], 401);
         }
 
         $token = $user->createToken('api-token')->plainTextToken;
@@ -64,6 +65,7 @@ class AuthController extends Controller
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Logged out', 'data' => new \stdClass()], 200);
+
+        return response()->json(['message' => 'Logged out', 'data' => new \stdClass], 200);
     }
 }

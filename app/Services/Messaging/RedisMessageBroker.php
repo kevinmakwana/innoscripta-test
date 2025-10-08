@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Messaging;
@@ -48,7 +49,7 @@ class RedisMessageBroker implements MessageBrokerInterface
 
     public function subscribeToTopic(string $topic, callable $callback): void
     {
-        if (!isset($this->subscribers[$topic])) {
+        if (! isset($this->subscribers[$topic])) {
             $this->subscribers[$topic] = [];
         }
         $this->subscribers[$topic][] = $callback;

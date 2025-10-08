@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Redis;
-use App\Services\Messaging\MessageProcessor;
 use App\Models\Article;
+use App\Services\Messaging\MessageProcessor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Redis;
+use Tests\TestCase;
 
 class MessagingProcessorPersistenceTest extends TestCase
 {
@@ -43,7 +44,7 @@ class MessagingProcessorPersistenceTest extends TestCase
         $this->assertDatabaseCount('articles', 1);
 
         // Re-processing the same payload should be skipped due to idempotency
-    $processor->process($payload);
-    $this->assertDatabaseCount('articles', 1);
+        $processor->process($payload);
+        $this->assertDatabaseCount('articles', 1);
     }
 }

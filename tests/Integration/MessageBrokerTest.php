@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use Tests\TestCase;
 use App\Contracts\MessageBrokerInterface;
 use Illuminate\Support\Facades\App;
+use Tests\TestCase;
 
 class MessageBrokerTest extends TestCase
 {
@@ -20,7 +20,8 @@ class MessageBrokerTest extends TestCase
         // don't require the phpredis extension. This keeps the test focused
         // on broker behavior (push/pop/len/publish) without external deps.
         $this->app->bind(MessageBrokerInterface::class, function () {
-            return new class implements MessageBrokerInterface {
+            return new class implements MessageBrokerInterface
+            {
                 private array $store = [];
 
                 public function push(string $destination, string $message): void
@@ -37,6 +38,7 @@ class MessageBrokerTest extends TestCase
                     if (! isset($this->store[$destination]) || ! is_array($this->store[$destination]) || empty($this->store[$destination])) {
                         return null;
                     }
+
                     return array_pop($this->store[$destination]);
                 }
 
@@ -75,7 +77,7 @@ class MessageBrokerTest extends TestCase
         $this->broker = App::make(MessageBrokerInterface::class);
     }
 
-    public function testPushAndPop(): void
+    public function test_push_and_pop(): void
     {
         $destination = 'test-queue';
         $message = 'Test Message';
@@ -86,7 +88,7 @@ class MessageBrokerTest extends TestCase
         $this->assertEquals($message, $poppedMessage);
     }
 
-    public function testGetQueueLength(): void
+    public function test_get_queue_length(): void
     {
         $destination = 'test-queue-length';
         // Clear the queue
@@ -101,7 +103,7 @@ class MessageBrokerTest extends TestCase
         $this->assertEquals(2, $length);
     }
 
-    public function testPublishAndSubscribe(): void
+    public function test_publish_and_subscribe(): void
     {
         $topic = 'test-topic';
         $message = 'Test Topic Message';

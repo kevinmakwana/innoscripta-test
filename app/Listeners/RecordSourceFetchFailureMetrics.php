@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Listeners;
 
+use App\Contracts\MessageBrokerInterface;
 use App\Events\SourceFetchFailed;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use App\Contracts\MessageBrokerInterface;
 
 /**
  * Listener that records source fetch failures into metrics and optionally

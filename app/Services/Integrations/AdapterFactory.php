@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Integrations;
 
-use App\Models\Source;
 use App\Contracts\SourceAdapterInterface;
+use App\Models\Source;
 
 /**
  * Simple factory that returns an adapter instance for a given Source model.
@@ -12,10 +13,6 @@ use App\Contracts\SourceAdapterInterface;
  */
 class AdapterFactory
 {
-    /**
-     * @param Source $source
-     * @return \App\Contracts\SourceAdapterInterface|null
-     */
     public static function forSource(Source $source): ?SourceAdapterInterface
     {
         // If the source has an explicit adapter class stored in the DB, prefer
@@ -35,9 +32,9 @@ class AdapterFactory
         }
 
         return match ($source->slug) {
-            'newsapi' => new NewsApiAdapter(),
-            'theguardian' => new GuardianAdapter(),
-            'nytimes' => new NytAdapter(),
+            'newsapi' => new NewsApiAdapter,
+            'theguardian' => new GuardianAdapter,
+            'nytimes' => new NytAdapter,
             default => null,
         };
     }

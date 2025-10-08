@@ -15,6 +15,6 @@ class OpenApiSpecTest extends TestCase
 
         $json = File::get($path);
         json_decode($json);
-        $this->assertEquals(JSON_ERROR_NONE, json_last_error(), 'openapi.json must be valid JSON: ' . json_last_error_msg());
+        $this->assertEquals(JSON_ERROR_NONE, json_last_error(), 'openapi.json must be valid JSON: '.json_last_error_msg());
     }
 }

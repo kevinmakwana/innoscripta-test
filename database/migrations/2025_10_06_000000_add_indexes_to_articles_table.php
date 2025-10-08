@@ -29,7 +29,7 @@ return new class extends Migration
                 try {
                     $driver = Schema::getConnection()->getDriverName();
                     if ($driver === 'mysql') {
-                        $found = DB::select("SHOW INDEX FROM `articles` WHERE Key_name = ?", [$indexName]);
+                        $found = DB::select('SHOW INDEX FROM `articles` WHERE Key_name = ?', [$indexName]);
                     }
                 } catch (\Throwable $e) {
                     // ignore and fall back to creating index

@@ -1,29 +1,29 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Models\Source;
+use App\DTOs\NormalizedArticle;
+use App\Events\SourceFetchFailed;
 use App\Models\Article;
 use App\Models\Author;
 use App\Models\Category;
-use App\Services\Integrations\AdapterFactory;
+use App\Models\Source;
 use App\Services\ArticleNormalizationService;
-use App\DTOs\NormalizedArticle;
 use App\Services\DeduplicationService;
+use App\Services\Integrations\AdapterFactory;
 use App\Services\Integrations\AdapterResolver;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\QueryException;
+use Illuminate\Queue\Attributes\WithoutRelations;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\Attributes\WithoutRelations;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\QueryException;
-use App\Events\SourceFetchFailed;
-
+use Illuminate\Support\Facades\Event;
 /**
  * Job responsible for fetching articles from a given Source and storing
  * them in the database. The job is intentionally small and delegates:
@@ -35,8 +35,8 @@ use App\Events\SourceFetchFailed;
  * are detected to avoid storing redundant entries.
  */
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Cache;
 
 class FetchSourceJob implements ShouldQueue
 {
@@ -46,10 +46,12 @@ class FetchSourceJob implements ShouldQueue
     }
 
     protected Source $source;
+
     #[WithoutRelations]
     protected mixed $adapter = null;
+
     protected string $idempotencyKey;
-    
+
     /**
      * Number of times the job may be attempted.
      *
@@ -65,45 +67,40 @@ class FetchSourceJob implements ShouldQueue
      */
     private static array $runtimeAdapters = [];
 
-    /**
-     * @param Source $source
-     * @param mixed $adapter
-     * @param string|null $idempotencyKey
-     */
     public function __construct(Source $source, mixed $adapter = null, ?string $idempotencyKey = null)
     {
         $this->source = $source;
         $this->adapter = $adapter;
         // Use a deterministic key for idempotency: source + date hour
-        $this->idempotencyKey = $idempotencyKey ?: 'fetchjob:' . $source->id . ':' . now()->format('YmdH');
+        $this->idempotencyKey = $idempotencyKey ?: 'fetchjob:'.$source->id.':'.now()->format('YmdH');
     }
-
 
     public function handle(ArticleNormalizationService $normalizer, AdapterResolver $adapterResolver, DeduplicationService $deduper): void
     {
         // Idempotency: prevent duplicate job execution for the same source/hour
         // Skip idempotency in testing environment to allow multiple job runs
-        if (!app()->environment('testing') && Cache::has($this->idempotencyKey)) {
+        if (! app()->environment('testing') && Cache::has($this->idempotencyKey)) {
             Log::info('FetchSourceJob: duplicate execution prevented', [
                 'source_id' => $this->source->id,
                 'idempotency_key' => $this->idempotencyKey,
             ]);
+
             return;
         }
-        if (!app()->environment('testing')) {
+        if (! app()->environment('testing')) {
             Cache::put($this->idempotencyKey, true, now()->addHour());
         }
 
         $adapter = $this->adapter ?? $adapterResolver->resolveForSource($this->source);
-        
+
         if (! $adapter) {
             Log::error('FetchSourceJob: adapter not found', [
                 'source_id' => $this->source->id,
                 'source_slug' => $this->source->slug,
             ]);
+
             return;
         }
-
 
         // Circuit breaker: if source is disabled, skip fetch
         if ($this->source->disabled_at) {
@@ -111,6 +108,7 @@ class FetchSourceJob implements ShouldQueue
                 'source_id' => $this->source->id,
                 'source_slug' => $this->source->slug,
             ]);
+
             return;
         }
 
@@ -165,8 +163,7 @@ class FetchSourceJob implements ShouldQueue
             return;
         }
 
-        $deduper = new DeduplicationService();
-
+        $deduper = new DeduplicationService;
 
         $processed = 0;
         foreach ($articles as $item) {
@@ -184,12 +181,12 @@ class FetchSourceJob implements ShouldQueue
                     if (isset($item['author']) && is_string($item['author']) && trim($item['author']) !== '') {
                         $author = ['name' => trim($item['author']), 'external_id' => null];
                     }
-                    
+
                     $category = null;
                     if (isset($item['category']) && is_string($item['category']) && trim($item['category']) !== '') {
                         $category = ['name' => trim($item['category']), 'slug' => Str::slug($item['category'])];
                     }
-                    
+
                     $dto = new NormalizedArticle(
                         md5((string) json_encode($item)),
                         $item['webTitle'] ?? $item['title'] ?? null,
@@ -263,7 +260,7 @@ class FetchSourceJob implements ShouldQueue
                         // Only allow Article fillable attributes to be mass assigned.
                         $articleAttrs = \Illuminate\Support\Arr::only($data, [
                             'source_id', 'external_id', 'title', 'excerpt', 'body', 'url', 'image_url',
-                            'published_at', 'author_id', 'category_id', 'raw_json'
+                            'published_at', 'author_id', 'category_id', 'raw_json',
                         ]);
 
                         try {
@@ -363,7 +360,7 @@ class FetchSourceJob implements ShouldQueue
         // registry won't have the instance and the adapter will be resolved
         // in handle() via AdapterResolver.
         if (is_object($this->adapter)) {
-            $key = 'ra_' . spl_object_id($this->adapter);
+            $key = 'ra_'.spl_object_id($this->adapter);
             self::$runtimeAdapters[$key] = $this->adapter;
             $this->adapter = ['__runtime_adapter_id' => $key];
         }
@@ -374,8 +371,7 @@ class FetchSourceJob implements ShouldQueue
     /**
      * Restore properties after unserialization. Ensure adapter remains null.
      *
-     * @param array<string,mixed> $values
-     * @return void
+     * @param  array<string,mixed>  $values
      */
     public function __unserialize(array $values): void
     {
@@ -394,4 +390,3 @@ class FetchSourceJob implements ShouldQueue
         }
     }
 }
-

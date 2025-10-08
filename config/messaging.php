@@ -1,4 +1,5 @@
 <?php
+
 return [
     'default' => env('MESSAGING_DRIVER', 'redis'),
     'dlq_prefix' => env('MESSAGING_DLQ_PREFIX', 'dlq.'),

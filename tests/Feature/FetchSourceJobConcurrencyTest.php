@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\Source;
 use App\Jobs\FetchSourceJob;
 use App\Models\Article;
+use App\Models\Source;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class FetchSourceJobConcurrencyTest extends TestCase
 {

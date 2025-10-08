@@ -1,17 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use App\Services\ArticleNormalizationService;
 use App\DTOs\NormalizedArticle;
+use App\Services\ArticleNormalizationService;
+use Tests\TestCase;
 
 class ArticleNormalizationTest extends TestCase
 {
     public function test_normalize_from_newsapi_includes_author_and_category_candidates(): void
     {
-        $service = new ArticleNormalizationService();
+        $service = new ArticleNormalizationService;
 
         $sample = [
             'source' => ['id' => 'newsapi'],
@@ -41,7 +42,7 @@ class ArticleNormalizationTest extends TestCase
 
     public function test_normalize_from_guardian_includes_author_and_category_candidates(): void
     {
-        $service = new ArticleNormalizationService();
+        $service = new ArticleNormalizationService;
 
         $sample = [
             'id' => 'guardian-1',
@@ -68,7 +69,7 @@ class ArticleNormalizationTest extends TestCase
 
     public function test_normalize_from_nyt_includes_author_and_category_candidates(): void
     {
-        $service = new ArticleNormalizationService();
+        $service = new ArticleNormalizationService;
 
         $sample = [
             'url' => 'https://nyt.example/article',

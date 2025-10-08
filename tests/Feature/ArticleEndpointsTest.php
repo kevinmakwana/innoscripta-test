@@ -2,43 +2,46 @@
 
 namespace Tests\Feature;
 
+use App\Models\Article;
+use App\Models\Author;
+use App\Models\Category;
+use App\Models\Source;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\Article;
-use App\Models\Source;
-use App\Models\Category;
-use App\Models\Author;
-use App\Models\User;
 
 class ArticleEndpointsTest extends TestCase
 {
     use RefreshDatabase;
 
     protected Source $source;
+
     protected Category $category;
+
     protected Author $author;
+
     protected User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create test data
         $this->source = Source::factory()->create([
             'name' => 'Test News',
             'slug' => 'test-news',
-            'enabled' => true
+            'enabled' => true,
         ]);
-        
+
         $this->category = Category::factory()->create([
             'name' => 'Technology',
-            'slug' => 'technology'
+            'slug' => 'technology',
         ]);
-        
+
         $this->author = Author::factory()->create([
-            'name' => 'John Doe'
+            'name' => 'John Doe',
         ]);
-        
+
         $this->user = User::factory()->create();
     }
 
@@ -55,23 +58,23 @@ class ArticleEndpointsTest extends TestCase
         $response = $this->getJson('/api/v1/articles');
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'data' => [
-                        '*' => [
-                            'id',
-                            'title',
-                            'excerpt',
-                            'url',
-                            'image_url',
-                            'published_at',
-                            'source' => ['id', 'name', 'slug'],
-                            'category' => ['id', 'name', 'slug'],
-                            'author' => ['id', 'name']
-                        ]
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'title',
+                        'excerpt',
+                        'url',
+                        'image_url',
+                        'published_at',
+                        'source' => ['id', 'name', 'slug'],
+                        'category' => ['id', 'name', 'slug'],
+                        'author' => ['id', 'name'],
                     ],
-                    'links',
-                    'meta'
-                ]);
+                ],
+                'links',
+                'meta',
+            ]);
 
         $this->assertCount(5, $response->json('data'));
     }
@@ -83,38 +86,38 @@ class ArticleEndpointsTest extends TestCase
             'source_id' => $this->source->id,
             'category_id' => $this->category->id,
             'author_id' => $this->author->id,
-            'title' => 'Test Article Title'
+            'title' => 'Test Article Title',
         ]);
 
         $response = $this->getJson("/api/v1/articles/{$article->id}");
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'data' => [
-                        'id',
-                        'title',
-                        'excerpt',
-                        'url',
-                        'image_url',
-                        'published_at',
-                        'source' => ['id', 'name', 'slug'],
-                        'category' => ['id', 'name', 'slug'],
-                        'author' => ['id', 'name']
-                    ]
-                ])
-                ->assertJson([
-                    'data' => [
-                        'id' => $article->id,
-                        'title' => 'Test Article Title'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'title',
+                    'excerpt',
+                    'url',
+                    'image_url',
+                    'published_at',
+                    'source' => ['id', 'name', 'slug'],
+                    'category' => ['id', 'name', 'slug'],
+                    'author' => ['id', 'name'],
+                ],
+            ])
+            ->assertJson([
+                'data' => [
+                    'id' => $article->id,
+                    'title' => 'Test Article Title',
+                ],
+            ]);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_404_for_non_existent_article()
     {
         $response = $this->getJson('/api/v1/articles/999');
-        
+
         $response->assertStatus(404);
     }
 
@@ -164,12 +167,12 @@ class ArticleEndpointsTest extends TestCase
 
         Article::factory(2)->create([
             'source_id' => $this->source->id,
-            'category_id' => $this->category->id
+            'category_id' => $this->category->id,
         ]);
-        
+
         Article::factory(3)->create([
             'source_id' => $this->source->id,
-            'category_id' => $anotherCategory->id
+            'category_id' => $anotherCategory->id,
         ]);
 
         $response = $this->getJson('/api/v1/articles?category=technology');
@@ -185,12 +188,12 @@ class ArticleEndpointsTest extends TestCase
 
         Article::factory(2)->create([
             'source_id' => $this->source->id,
-            'author_id' => $this->author->id
+            'author_id' => $this->author->id,
         ]);
-        
+
         Article::factory(1)->create([
             'source_id' => $this->source->id,
-            'author_id' => $anotherAuthor->id
+            'author_id' => $anotherAuthor->id,
         ]);
 
         // Test filtering by author ID
@@ -209,17 +212,17 @@ class ArticleEndpointsTest extends TestCase
     {
         Article::factory()->create([
             'source_id' => $this->source->id,
-            'published_at' => '2024-01-15 10:00:00'
+            'published_at' => '2024-01-15 10:00:00',
         ]);
 
         Article::factory()->create([
             'source_id' => $this->source->id,
-            'published_at' => '2024-02-15 10:00:00'
+            'published_at' => '2024-02-15 10:00:00',
         ]);
 
         Article::factory()->create([
             'source_id' => $this->source->id,
-            'published_at' => '2024-03-15 10:00:00'
+            'published_at' => '2024-03-15 10:00:00',
         ]);
 
         // Filter by date range
@@ -238,15 +241,15 @@ class ArticleEndpointsTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertCount(10, $response->json('data'));
-        
+
         // Check pagination meta
         $response->assertJsonStructure([
             'meta' => [
                 'current_page',
                 'per_page',
                 'total',
-                'last_page'
-            ]
+                'last_page',
+            ],
         ]);
 
         $this->assertEquals(10, $response->json('meta.per_page'));
@@ -263,7 +266,7 @@ class ArticleEndpointsTest extends TestCase
             'title' => 'Laravel News Update',
             'source_id' => $this->source->id,
             'category_id' => $this->category->id,
-            'published_at' => '2024-02-15 10:00:00'
+            'published_at' => '2024-02-15 10:00:00',
         ]);
 
         // Create articles that don't match all criteria
@@ -271,7 +274,7 @@ class ArticleEndpointsTest extends TestCase
             'title' => 'Vue.js Update',
             'source_id' => $anotherSource->id,
             'category_id' => $this->category->id,
-            'published_at' => '2024-02-15 10:00:00'
+            'published_at' => '2024-02-15 10:00:00',
         ]);
 
         $response = $this->getJson('/api/v1/articles?q=Laravel&source=test-news&category=technology&from=2024-01-01&to=2024-12-31');
@@ -287,20 +290,20 @@ class ArticleEndpointsTest extends TestCase
         $older = Article::factory()->create([
             'source_id' => $this->source->id,
             'published_at' => '2024-01-15 10:00:00',
-            'title' => 'Older Article'
+            'title' => 'Older Article',
         ]);
 
         $newer = Article::factory()->create([
             'source_id' => $this->source->id,
             'published_at' => '2024-02-15 10:00:00',
-            'title' => 'Newer Article'
+            'title' => 'Newer Article',
         ]);
 
         $response = $this->getJson('/api/v1/articles');
 
         $response->assertStatus(200);
         $articles = $response->json('data');
-        
+
         $this->assertEquals('Newer Article', $articles[0]['title']);
         $this->assertEquals('Older Article', $articles[1]['title']);
     }

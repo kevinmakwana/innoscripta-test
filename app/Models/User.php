@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
@@ -50,8 +51,6 @@ class User extends Authenticatable
 
     /**
      * Get the user's preference settings.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function userPreference(): \Illuminate\Database\Eloquent\Relations\HasOne
     {

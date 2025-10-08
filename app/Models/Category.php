@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Category model.
@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $slug
  *
  * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\CategoryFactory>
+ *
  * @method \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Article, \App\Models\Category> articles()
  */
 class Category extends Model
@@ -21,9 +22,6 @@ class Category extends Model
 
     protected $fillable = ['name', 'slug'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function articles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Article::class);

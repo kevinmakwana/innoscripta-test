@@ -1,17 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use Tests\TestCase;
-use App\Models\Source;
-use App\Models\Article;
-use App\Jobs\FetchSourceJob;
 use App\Contracts\SourceAdapterInterface;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
 use App\Events\SourceFetchFailed;
+use App\Jobs\FetchSourceJob;
+use App\Models\Article;
+use App\Models\Source;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Event;
+use Tests\TestCase;
 
 class FetchSourceJobE2ETest extends TestCase
 {
@@ -25,7 +26,7 @@ class FetchSourceJobE2ETest extends TestCase
         // Create a test source
         $source = Source::factory()->create([
             'name' => 'Test Source',
-            'slug' => 'test-source-' . uniqid(),
+            'slug' => 'test-source-'.uniqid(),
             'adapter_class' => 'App\Services\Integrations\NewsApiAdapter',
             'enabled' => true,
         ]);

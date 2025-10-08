@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Http;
 use App\Services\Integrations\NewsApiAdapter;
+use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
 
 class NewsApiAdapterTest extends TestCase
 {
@@ -12,12 +12,12 @@ class NewsApiAdapterTest extends TestCase
     {
         Http::fake([
             'https://newsapi.org/*' => Http::response(['articles' => [
-                ['title' => 'Test', 'description' => 'desc', 'source' => ['id' => 'test']]
-            ]], 200)
+                ['title' => 'Test', 'description' => 'desc', 'source' => ['id' => 'test']],
+            ]], 200),
         ]);
 
-    config()->set('news.newsapi.key', 'test');
-    $adapter = new NewsApiAdapter();
+        config()->set('news.newsapi.key', 'test');
+        $adapter = new NewsApiAdapter;
         $collection = $adapter->fetchTopHeadlines(['q' => 'test']);
 
         $this->assertCount(1, $collection);

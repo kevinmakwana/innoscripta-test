@@ -1,17 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use Tests\TestCase;
-use App\Models\Source;
-use App\Jobs\FetchSourceJob;
 use App\Contracts\SourceAdapterInterface;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
 use App\Events\SourceFetchFailed;
+use App\Jobs\FetchSourceJob;
+use App\Models\Source;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
+use Tests\TestCase;
 
 class BrokerFailureTest extends TestCase
 {

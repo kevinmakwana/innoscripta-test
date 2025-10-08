@@ -1,16 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Support\Facades\Redis;
+use Tests\TestCase;
 
 class MessagingDLQTest extends TestCase
 {
     public function test_invalid_message_is_pushed_to_dlq()
     {
-    $invalid = (string) json_encode(['bad' => 'payload']);
+        $invalid = (string) json_encode(['bad' => 'payload']);
 
         Redis::shouldReceive('rpop')->once()->andReturn($invalid);
         Redis::shouldReceive('lpush')->once()->with('dlq.source.fetch.failed', $invalid);
@@ -23,7 +24,7 @@ class MessagingDLQTest extends TestCase
 
     public function test_idempotent_message_is_skipped()
     {
-    $message = (string) json_encode(['version' => 1, 'type' => 'source.fetch.failed', 'data' => ['id' => 1]]);
+        $message = (string) json_encode(['version' => 1, 'type' => 'source.fetch.failed', 'data' => ['id' => 1]]);
 
         // Simulate message popped
         Redis::shouldReceive('rpop')->once()->andReturn($message);

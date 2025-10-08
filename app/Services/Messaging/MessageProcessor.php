@@ -1,14 +1,15 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Messaging;
 
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Log;
-use App\Services\ArticleNormalizationService;
 use App\Models\Article;
 use App\Models\Source;
+use App\Services\ArticleNormalizationService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class MessageProcessor
 {
@@ -19,7 +20,7 @@ class MessageProcessor
      * Returns true when valid.
      */
     /**
-     * @param array<string,mixed> $payload
+     * @param  array<string,mixed>  $payload
      */
     public function validate(array $payload): bool
     {
@@ -39,19 +40,20 @@ class MessageProcessor
      * Compute an idempotency key for a message. Uses type + a stable fingerprint of data.
      */
     /**
-     * @param array<string,mixed> $payload
+     * @param  array<string,mixed>  $payload
      */
     public function idempotencyKey(array $payload): string
     {
-    $dataHash = md5((string) json_encode($payload['data'] ?? []));
-        return $this->idPrefix . ($payload['type'] ?? 'unknown') . ':' . $dataHash;
+        $dataHash = md5((string) json_encode($payload['data'] ?? []));
+
+        return $this->idPrefix.($payload['type'] ?? 'unknown').':'.$dataHash;
     }
 
     /**
      * Check-and-mark idempotency. Returns true if this message was already processed.
      */
     /**
-     * @param array<string,mixed> $payload
+     * @param  array<string,mixed>  $payload
      */
     public function alreadyProcessed(array $payload): bool
     {
@@ -63,6 +65,7 @@ class MessageProcessor
 
         $ttl = config('messaging.idempotency_ttl', 86400);
         Redis::setex($key, (int) $ttl, '1');
+
         return false;
     }
 
@@ -70,7 +73,7 @@ class MessageProcessor
      * Process the message payload (business logic placeholder).
      */
     /**
-     * @param array<string,mixed> $payload
+     * @param  array<string,mixed>  $payload
      */
     public function process(array $payload): void
     {
@@ -78,14 +81,16 @@ class MessageProcessor
         if (! $this->validate($payload)) {
             Log::warning('MessageProcessor: invalid payload, sending to DLQ', ['payload' => $payload]);
             // push to DLQ
-            $dlq = config('messaging.dlq_prefix', 'messaging:dlq:') . ($payload['type'] ?? 'unknown');
+            $dlq = config('messaging.dlq_prefix', 'messaging:dlq:').($payload['type'] ?? 'unknown');
             Redis::rpush($dlq, (string) json_encode($payload));
+
             return;
         }
 
         // Already processed check (idempotency)
         if ($this->alreadyProcessed($payload)) {
             Log::info('MessageProcessor: skipping already processed message', ['key' => $this->idempotencyKey($payload)]);
+
             return;
         }
 
@@ -101,6 +106,7 @@ class MessageProcessor
             }
             event(new \App\Events\SourceFetchFailed($source, $data['error_message'], $data['exhausted'] ?? false));
             Log::info('MessageProcessor: fired SourceFetchFailed event', ['data' => $data]);
+
             return;
         }
 
@@ -184,7 +190,7 @@ class MessageProcessor
             Log::info('MessageProcessor: processed and persisted article', ['external_id' => $normalized->external_id]);
         } catch (\Throwable $e) {
             Log::error('MessageProcessor: processing failed, sending to DLQ', ['error' => $e->getMessage(), 'payload' => $payload]);
-            $dlq = config('messaging.dlq_prefix', 'messaging:dlq:') . ($payload['type'] ?? 'unknown');
+            $dlq = config('messaging.dlq_prefix', 'messaging:dlq:').($payload['type'] ?? 'unknown');
             Redis::rpush($dlq, (string) json_encode(['payload' => $payload, 'error' => $e->getMessage()]));
             // Let the idempotency key expire naturally; do not mark as processed
         }

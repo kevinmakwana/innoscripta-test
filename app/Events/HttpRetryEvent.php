@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Events;
@@ -11,10 +12,15 @@ class HttpRetryEvent
     use Dispatchable, SerializesModels;
 
     public string $uri;
+
     public int $attempt;
+
     public ?int $statusCode;
+
     public ?string $errorMessage;
+
     public int $elapsedMs;
+
     public bool $exhausted;
 
     public function __construct(string $uri, int $attempt, ?int $statusCode, ?string $errorMessage, int $elapsedMs, bool $exhausted = false)

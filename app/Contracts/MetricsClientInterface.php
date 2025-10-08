@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Contracts;
@@ -8,9 +9,7 @@ interface MetricsClientInterface
     /**
      * Increment a named metric. Implementations may map this to StatsD counters or Redis keys.
      *
-     * @param string $name
-     * @param int $value
-     * @param array<string,string> $tags
+     * @param  array<string,string>  $tags
      */
     public function incrementMetric(string $name, int $value = 1, array $tags = []): void;
 

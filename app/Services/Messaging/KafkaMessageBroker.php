@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Messaging;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 class KafkaMessageBroker implements MessageBrokerInterface
 {
     /**
-     * @param array<string,mixed> $config
+     * @param  array<string,mixed>  $config
      */
     public function __construct(array $config = [])
     {

@@ -1,13 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Redis;
 use App\Models\Article;
 use App\Services\Messaging\MessageProcessor;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Redis;
+use Tests\TestCase;
 
 class MessagingE2ETest extends TestCase
 {
@@ -26,7 +27,7 @@ class MessagingE2ETest extends TestCase
         // cause data written by re-bootstrapped commands to be invisible
         // to the test assertions.
         $root = dirname(__DIR__, 2);
-        $dbFile = $root . '/database/database.sqlite';
+        $dbFile = $root.'/database/database.sqlite';
 
         if (! file_exists($dbFile)) {
             // Ensure the database directory exists and touch the file.
@@ -34,9 +35,9 @@ class MessagingE2ETest extends TestCase
             @touch($dbFile);
         }
 
-    // Set env in multiple places to ensure Laravel's env() picks them up
+        // Set env in multiple places to ensure Laravel's env() picks them up
         putenv('DB_CONNECTION=sqlite');
-        putenv('DB_DATABASE=' . $dbFile);
+        putenv('DB_DATABASE='.$dbFile);
         $_ENV['DB_CONNECTION'] = 'sqlite';
         $_ENV['DB_DATABASE'] = $dbFile;
         $_SERVER['DB_CONNECTION'] = 'sqlite';
@@ -57,6 +58,7 @@ class MessagingE2ETest extends TestCase
 
         \Illuminate\Support\Facades\Redis::shouldReceive('rpush')->andReturnUsing(function ($destination, $payload) use (&$listStorage) {
             $listStorage[$destination][] = is_string($payload) ? $payload : (string) json_encode($payload);
+
             return true;
         });
 
@@ -64,12 +66,14 @@ class MessagingE2ETest extends TestCase
             if (empty($listStorage[$destination])) {
                 return null;
             }
+
             return array_pop($listStorage[$destination]);
         });
 
         \Illuminate\Support\Facades\Redis::shouldReceive('lpush')->andReturnUsing(function ($destination, $payload) use (&$listStorage) {
             // lpush pushes to head; emulate by array_unshift
             array_unshift($listStorage[$destination], is_string($payload) ? $payload : (string) json_encode($payload));
+
             return true;
         });
 
@@ -80,6 +84,7 @@ class MessagingE2ETest extends TestCase
         });
         \Illuminate\Support\Facades\Redis::shouldReceive('setex')->andReturnUsing(function ($key, $ttl, $value) use (&$kv) {
             $kv[$key] = $value;
+
             return true;
         });
 

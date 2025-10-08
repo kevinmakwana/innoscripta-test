@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Resources;
@@ -19,9 +20,9 @@ class ArticleResource extends JsonResource
             'url' => $this->url,
             'image_url' => $this->image_url,
             'published_at' => $this->published_at?->toIso8601String(),
-            'source' => $this->source?->only(['id','name','slug']),
-            'category' => $this->category?->only(['id','name','slug']),
-            'author' => $this->author?->only(['id','name']),
+            'source' => $this->source?->only(['id', 'name', 'slug']),
+            'category' => $this->category?->only(['id', 'name', 'slug']),
+            'author' => $this->author?->only(['id', 'name']),
         ];
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Source;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Source;
 
 class SourceFactory extends Factory
 {
@@ -13,7 +13,7 @@ class SourceFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->company();
-        $slug = Str::slug($name) ?: 'source-' . Str::random(6);
+        $slug = Str::slug($name) ?: 'source-'.Str::random(6);
 
         return [
             'name' => $name,

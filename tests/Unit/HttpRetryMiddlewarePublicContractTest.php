@@ -2,15 +2,14 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Http\Client\Response;
 use App\Events\HttpRetryEvent;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
 
 class HttpRetryMiddlewarePublicContractTest extends TestCase
 {
-    public function test_http_withRetry_retries_and_dispatches_events()
+    public function test_http_with_retry_retries_and_dispatches_events()
     {
         Event::fake();
 

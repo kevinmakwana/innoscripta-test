@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Source model.
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool $enabled
  *
  * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\SourceFactory>
+ *
  * @method \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Article, \App\Models\Source> articles()
  */
 class Source extends Model
@@ -37,9 +39,6 @@ class Source extends Model
         'disabled_at' => 'datetime',
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function articles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Article::class);

@@ -2,27 +2,27 @@
 
 namespace Tests\Unit\Integrations;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Http;
 use App\Services\Integrations\NewsApiAdapter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
 
 class NewsApiAdapterTest extends TestCase
 {
     use RefreshDatabase;
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function test_fetchTopHeadlines_returns_collection_when_api_ok()
+    public function test_fetch_top_headlines_returns_collection_when_api_ok()
     {
         Http::fake([
             'https://newsapi.org/*' => Http::response(['articles' => [
-                ['title' => 'Test', 'description' => 'Desc']
-            ]], 200)
+                ['title' => 'Test', 'description' => 'Desc'],
+            ]], 200),
         ]);
 
-    config()->set('news.newsapi.key', 'test_key');
+        config()->set('news.newsapi.key', 'test_key');
 
-        $adapter = new NewsApiAdapter();
+        $adapter = new NewsApiAdapter;
         $result = $adapter->fetchTopHeadlines(['q' => 'test']);
 
         $this->assertIsIterable($result);
@@ -30,12 +30,12 @@ class NewsApiAdapterTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function test_fetchTopHeadlines_returns_empty_when_no_key()
+    public function test_fetch_top_headlines_returns_empty_when_no_key()
     {
-    // Ensure config key is empty for this test
-    config()->set('news.newsapi.key', null);
+        // Ensure config key is empty for this test
+        config()->set('news.newsapi.key', null);
 
-        $adapter = new NewsApiAdapter();
+        $adapter = new NewsApiAdapter;
         $result = $adapter->fetchTopHeadlines(['q' => 'test']);
 
         $this->assertIsIterable($result);

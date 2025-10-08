@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Metrics;
@@ -30,11 +31,13 @@ class StatsDClient implements MetricsClientInterface
         if (is_object($this->client) && method_exists($this->client, 'increment')) {
             // popular clients support tags as an associative array
             $this->client->increment($name, $value, 1.0, $tags);
+
             return;
         }
 
         if (is_object($this->client) && method_exists($this->client, 'count')) {
             $this->client->count($name, $value);
+
             return;
         }
     }

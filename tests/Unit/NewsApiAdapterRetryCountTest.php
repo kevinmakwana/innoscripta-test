@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Http;
 use App\Services\Integrations\NewsApiAdapter;
+use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
 
 class NewsApiAdapterRetryCountTest extends TestCase
 {
@@ -14,12 +14,12 @@ class NewsApiAdapterRetryCountTest extends TestCase
         $sequence = Http::fakeSequence();
         $sequence->push('', 500)->push('', 500)->push(['articles' => [['title' => 'OK']]], 200);
 
-    config()->set('news.newsapi.key', 'test_key');
-    config()->set('news.newsapi.retry_attempts', 3);
-    config()->set('news.newsapi.retry_sleep_ms', 1);
-    config()->set('news.newsapi.retry_max_sleep_ms', 10);
+        config()->set('news.newsapi.key', 'test_key');
+        config()->set('news.newsapi.retry_attempts', 3);
+        config()->set('news.newsapi.retry_sleep_ms', 1);
+        config()->set('news.newsapi.retry_max_sleep_ms', 10);
 
-        $adapter = new NewsApiAdapter();
+        $adapter = new NewsApiAdapter;
         $result = $adapter->fetchTopHeadlines(['q' => 'test']);
 
         $this->assertIsIterable($result);

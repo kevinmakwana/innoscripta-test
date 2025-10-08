@@ -1,17 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use App\Services\ArticleNormalizationService;
 use App\DTOs\NormalizedArticle;
+use App\Services\ArticleNormalizationService;
+use Tests\TestCase;
 
 class ArticleNormalizationStrictTest extends TestCase
 {
     public function test_normalize_from_newsapi_returns_expected_shape()
     {
-        $service = new ArticleNormalizationService();
+        $service = new ArticleNormalizationService;
 
         $item = [
             'source' => ['id' => 'test-source'],
@@ -50,7 +51,7 @@ class ArticleNormalizationStrictTest extends TestCase
 
     public function test_normalize_from_guardian_returns_expected_shape()
     {
-        $service = new ArticleNormalizationService();
+        $service = new ArticleNormalizationService;
 
         $item = [
             'id' => 'guardian-1',
@@ -89,7 +90,7 @@ class ArticleNormalizationStrictTest extends TestCase
 
     public function test_normalize_from_nyt_returns_expected_shape()
     {
-        $service = new ArticleNormalizationService();
+        $service = new ArticleNormalizationService;
 
         $item = [
             'url' => 'https://nyt.example/article',

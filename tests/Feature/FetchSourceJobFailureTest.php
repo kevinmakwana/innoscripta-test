@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use App\Events\SourceFetchFailed;
+use App\Jobs\FetchSourceJob;
+use App\Models\Article;
+use App\Models\Source;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
-use App\Models\Source;
-use App\Jobs\FetchSourceJob;
-use App\Events\SourceFetchFailed;
-use App\Models\Article;
+use Tests\TestCase;
 
 class FetchSourceJobFailureTest extends TestCase
 {
@@ -21,7 +21,7 @@ class FetchSourceJobFailureTest extends TestCase
         $source = Source::factory()->create(['slug' => 'newsapi', 'name' => 'Throwing Source']);
 
         $throwingAdapter = $this->createMock(\App\Contracts\SourceAdapterInterface::class);
-    $throwingAdapter->method('fetchTopHeadlines')->will($this->throwException(new \RuntimeException('adapter down')));
+        $throwingAdapter->method('fetchTopHeadlines')->will($this->throwException(new \RuntimeException('adapter down')));
 
         $job = new FetchSourceJob($source, $throwingAdapter);
         $job->handle(

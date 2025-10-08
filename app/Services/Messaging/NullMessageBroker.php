@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Messaging;
@@ -16,6 +17,7 @@ class NullMessageBroker implements MessageBrokerInterface
     public function pop(string $destination): ?string
     {
         Log::debug('NullMessageBroker: pop', ['destination' => $destination]);
+
         return null;
     }
 
@@ -27,6 +29,7 @@ class NullMessageBroker implements MessageBrokerInterface
     public function getQueueLength(string $destination): int
     {
         Log::debug('NullMessageBroker: getQueueLength', ['destination' => $destination]);
+
         return 0;
     }
 
@@ -34,7 +37,7 @@ class NullMessageBroker implements MessageBrokerInterface
     {
         Log::debug('NullMessageBroker: publishToTopic', ['topic' => $topic, 'message' => $message]);
     }
-    
+
     public function publish(string $destination, string $message): void
     {
         Log::debug('NullMessageBroker: publish', ['destination' => $destination, 'message' => $message]);

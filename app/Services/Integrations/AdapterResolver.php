@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services\Integrations;
 
-use App\Models\Source;
 use App\Contracts\SourceAdapterInterface;
+use App\Models\Source;
 
 class AdapterResolver
 {

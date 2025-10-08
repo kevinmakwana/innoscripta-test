@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
@@ -12,7 +13,7 @@ class DocsController extends Controller
     {
         $path = base_path('docs/openapi.json');
         if (! file_exists($path)) {
-            return response()->json(['message' => 'OpenAPI spec not found', 'data' => new \stdClass()], 404);
+            return response()->json(['message' => 'OpenAPI spec not found', 'data' => new \stdClass], 404);
         }
 
         return response()->file($path, ['Content-Type' => 'application/json']);

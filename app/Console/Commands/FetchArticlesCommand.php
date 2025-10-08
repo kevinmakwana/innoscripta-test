@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Source;
 use App\Jobs\FetchSourceJob;
+use App\Models\Source;
+use Illuminate\Console\Command;
 
 class FetchArticlesCommand extends Command
 {
@@ -25,6 +26,7 @@ class FetchArticlesCommand extends Command
 
         if ($sources->isEmpty()) {
             $this->info('No sources enabled.');
+
             return 0;
         }
 
@@ -33,6 +35,7 @@ class FetchArticlesCommand extends Command
         }
 
         $this->info('Fetch jobs dispatched.');
+
         return 0;
     }
 }

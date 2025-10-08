@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Providers;
@@ -13,7 +14,7 @@ class MessagingServiceProvider extends ServiceProvider
         // provider to register different broker implementations per environment.
         $this->app->bind(\App\Contracts\MessageBrokerInterface::class, function ($app) {
             // For testing, always use RedisMessageBroker
-            return new \App\Services\Messaging\RedisMessageBroker();
+            return new \App\Services\Messaging\RedisMessageBroker;
         });
     }
 

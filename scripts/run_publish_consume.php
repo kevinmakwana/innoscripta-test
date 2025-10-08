@@ -1,22 +1,25 @@
 <?php
-require __DIR__ . '/../vendor/autoload.php';
-$app = require __DIR__ . '/../bootstrap/app.php';
+
+require __DIR__.'/../vendor/autoload.php';
+$app = require __DIR__.'/../bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 
 // Mock Redis facade to avoid requiring phpredis in local CLI
 \Illuminate\Support\Facades\Redis::shouldReceive('rpush')->andReturnUsing(function ($destination, $payload) {
-	// store in simple static
-	static $store = [];
-	$store[$destination][] = is_string($payload) ? $payload : (string) json_encode($payload);
-	return true;
+    // store in simple static
+    static $store = [];
+    $store[$destination][] = is_string($payload) ? $payload : (string) json_encode($payload);
+
+    return true;
 });
 
 \Illuminate\Support\Facades\Redis::shouldReceive('rpop')->andReturnUsing(function ($destination) {
-	static $store = [];
-	if (empty($store[$destination])) {
-		return null;
-	}
-	return array_pop($store[$destination]);
+    static $store = [];
+    if (empty($store[$destination])) {
+        return null;
+    }
+
+    return array_pop($store[$destination]);
 });
 
 \Illuminate\Support\Facades\Redis::shouldReceive('lpush')->andReturnTrue();

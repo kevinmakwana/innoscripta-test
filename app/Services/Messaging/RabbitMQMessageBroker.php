@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services\Messaging;
 
+use App\Contracts\MessageBrokerInterface;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-use App\Contracts\MessageBrokerInterface;
 
 class RabbitMQMessageBroker implements MessageBrokerInterface
 {
     private AMQPStreamConnection $connection;
+
     private string $exchange;
 
     public function __construct(string $host, int $port, string $user, string $password, string $exchange)
@@ -37,10 +38,12 @@ class RabbitMQMessageBroker implements MessageBrokerInterface
         if ($message) {
             $channel->basic_ack($message->delivery_info['delivery_tag']);
             $channel->close();
+
             return $message->body;
         }
 
         $channel->close();
+
         return null;
     }
 
@@ -52,8 +55,9 @@ class RabbitMQMessageBroker implements MessageBrokerInterface
     public function getQueueLength(string $destination): int
     {
         $channel = $this->connection->channel();
-        list(, $messageCount) = $channel->queue_declare($destination, true);
+        [, $messageCount] = $channel->queue_declare($destination, true);
         $channel->close();
+
         return $messageCount;
     }
 

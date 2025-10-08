@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Events\HttpRetryEvent;
 use App\Events\SourceFetchFailed;
 use App\Listeners\RecordHttpRetryMetrics;
 use App\Listeners\RecordSourceFetchFailureMetrics;
+use Illuminate\Support\ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {

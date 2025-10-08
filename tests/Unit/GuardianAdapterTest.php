@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Http;
 use App\Services\Integrations\GuardianAdapter;
+use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
 
 class GuardianAdapterTest extends TestCase
 {
@@ -12,12 +12,12 @@ class GuardianAdapterTest extends TestCase
     {
         Http::fake([
             'https://content.guardianapis.com/*' => Http::response(['response' => ['results' => [
-                ['webTitle' => 'G Test', 'fields' => ['trailText' => 'desc']]
-            ]]], 200)
+                ['webTitle' => 'G Test', 'fields' => ['trailText' => 'desc']],
+            ]]], 200),
         ]);
 
-    config()->set('news.guardian.key', 'test');
-    $adapter = new GuardianAdapter();
+        config()->set('news.guardian.key', 'test');
+        $adapter = new GuardianAdapter;
         $collection = $adapter->fetchTopHeadlines(['q' => 'test']);
 
         $this->assertCount(1, $collection);

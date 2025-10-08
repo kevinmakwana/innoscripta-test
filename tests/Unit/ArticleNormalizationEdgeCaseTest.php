@@ -1,17 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use App\Services\ArticleNormalizationService;
 use App\DTOs\NormalizedArticle;
+use App\Services\ArticleNormalizationService;
+use Tests\TestCase;
 
 class ArticleNormalizationEdgeCaseTest extends TestCase
 {
     public function test_normalize_handles_missing_author_and_category()
     {
-        $srv = new ArticleNormalizationService();
+        $srv = new ArticleNormalizationService;
 
         $item = [
             'title' => 'Edge',
@@ -38,7 +39,7 @@ class ArticleNormalizationEdgeCaseTest extends TestCase
 
     public function test_normalize_nyt_handles_empty_multimedia()
     {
-        $srv = new ArticleNormalizationService();
+        $srv = new ArticleNormalizationService;
 
         $item = [
             'url' => 'https://nyt.example/empty',

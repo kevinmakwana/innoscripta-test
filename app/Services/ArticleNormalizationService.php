@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Support\Str;
 use App\DTOs\NormalizedArticle;
+use Illuminate\Support\Str;
 
 /**
  * Service responsible for normalizing provider-specific article payloads
@@ -20,9 +21,9 @@ class ArticleNormalizationService
     /**
      * Normalize a NewsAPI article payload.
      *
-    * @param array<string,mixed> $item Raw NewsAPI article array
-    * @return \App\DTOs\NormalizedArticle Normalized article data
-    */
+     * @param  array<string,mixed>  $item  Raw NewsAPI article array
+     * @return \App\DTOs\NormalizedArticle Normalized article data
+     */
     public function normalizeFromNewsApi(array $item): NormalizedArticle
     {
         $author = null;
@@ -52,9 +53,9 @@ class ArticleNormalizationService
     /**
      * Normalize a The Guardian article payload.
      *
-    * @param array<string,mixed> $item Raw Guardian article array
-    * @return \App\DTOs\NormalizedArticle Normalized article data
-    */
+     * @param  array<string,mixed>  $item  Raw Guardian article array
+     * @return \App\DTOs\NormalizedArticle Normalized article data
+     */
     public function normalizeFromGuardian(array $item): NormalizedArticle
     {
         $author = null;
@@ -84,9 +85,9 @@ class ArticleNormalizationService
     /**
      * Normalize a New York Times article payload.
      *
-    * @param array<string,mixed> $item Raw NYT article array
-    * @return \App\DTOs\NormalizedArticle Normalized article data
-    */
+     * @param  array<string,mixed>  $item  Raw NYT article array
+     * @return \App\DTOs\NormalizedArticle Normalized article data
+     */
     public function normalizeFromNyt(array $item): NormalizedArticle
     {
         $author = null;
@@ -116,7 +117,7 @@ class ArticleNormalizationService
     /**
      * Normalize author payload into strict shape or null.
      *
-     * @param array<string,mixed> $author
+     * @param  array<string,mixed>  $author
      * @return array{name:string,external_id:?string}|null
      */
     protected function normalizeAuthor(array $author): ?array
@@ -134,7 +135,7 @@ class ArticleNormalizationService
     /**
      * Normalize category payload into strict shape or null.
      *
-     * @param array<string,mixed> $category
+     * @param  array<string,mixed>  $category
      * @return array{name:string,slug:string}|null
      */
     protected function normalizeCategory(array $category): ?array
@@ -152,8 +153,7 @@ class ArticleNormalizationService
     /**
      * Extract the first image URL from an NYT multimedia block if present.
      *
-    * @param array<string,mixed> $item Raw NYT article array
-    * @return string|null
+     * @param  array<string,mixed>  $item  Raw NYT article array
      */
     protected function extractNytImage(array $item): ?string
     {
@@ -168,13 +168,12 @@ class ArticleNormalizationService
      * Generate a stable external_id for items that lack a provider id.
      * Uses source id + title when available or an MD5 of the filtered payload.
      *
-    * @param array<string,mixed> $item
-    * @return string
+     * @param  array<string,mixed>  $item
      */
     protected function generateExternalId(array $item): string
     {
         if (! empty($item['source']['id'])) {
-            return (string) $item['source']['id'] . '::' . (($item['title'] ?? (string) Str::uuid()));
+            return (string) $item['source']['id'].'::'.(($item['title'] ?? (string) Str::uuid()));
         }
 
         return md5((string) json_encode(array_filter($item)));

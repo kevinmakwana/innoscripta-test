@@ -9,8 +9,7 @@ class HandlerStackFactory
     /**
      * Former factory entrypoint. Kept for backward compatibility but removed.
      *
-     * @param mixed ...$args
-     * @return void
+     * @param  mixed  ...$args
      */
     public function create(...$args): void
     {

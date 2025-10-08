@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Article model representing a normalized article stored locally.
@@ -21,7 +22,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property array<string,mixed>|null $raw_json
  *
  * @use \Illuminate\Database\Eloquent\Factories\HasFactory<\Database\Factories\ArticleFactory>
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<\App\Models\Article> search(?string $q)
+ *
  * @mixin \Illuminate\Database\Eloquent\Builder<\App\Models\Article>
  *
  * Note: callers may use Article::search($q) (static invocation) rather than
@@ -33,7 +36,7 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
-        'source_id', 'external_id', 'title', 'excerpt', 'body', 'url', 'image_url', 'published_at', 'category_id', 'author_id', 'raw_json'
+        'source_id', 'external_id', 'title', 'excerpt', 'body', 'url', 'image_url', 'published_at', 'category_id', 'author_id', 'raw_json',
     ];
 
     /**
@@ -44,25 +47,16 @@ class Article extends Model
         'raw_json' => 'array',
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function source(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Source::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Author::class);
@@ -71,14 +65,9 @@ class Article extends Model
     /**
      * Scope a query to search title and excerpt using LIKE. This centralizes
      * current behavior and makes switching to full-text later easier.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string|null $q
-     * @return \Illuminate\Database\Eloquent\Builder
      */
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Article> $query
-     * @param string|null $q
+     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Article>  $query
      * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Article>
      */
     public function scopeSearch(\Illuminate\Database\Eloquent\Builder $query, ?string $q): \Illuminate\Database\Eloquent\Builder
@@ -87,7 +76,8 @@ class Article extends Model
             return $query;
         }
 
-        $like = '%'. $q . '%';
+        $like = '%'.$q.'%';
+
         return $query->where(function ($sub) use ($like) {
             $sub->where('title', 'like', $like)
                 ->orWhere('excerpt', 'like', $like);

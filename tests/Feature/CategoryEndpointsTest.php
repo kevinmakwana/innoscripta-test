@@ -2,25 +2,26 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use App\Models\Category;
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Source;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class CategoryEndpointsTest extends TestCase
 {
     use RefreshDatabase;
 
     protected User $user;
+
     protected Source $source;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = User::factory()->create();
         $this->source = Source::factory()->create();
     }
@@ -33,18 +34,18 @@ class CategoryEndpointsTest extends TestCase
         $response = $this->getJson('/api/v1/categories');
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'data' => [
-                        '*' => [
-                            'id',
-                            'name',
-                            'slug',
-                            'articles_count',
-                            'created_at',
-                            'updated_at'
-                        ]
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'slug',
+                        'articles_count',
+                        'created_at',
+                        'updated_at',
+                    ],
+                ],
+            ]);
 
         $this->assertCount(5, $response->json('data'));
     }
@@ -57,16 +58,16 @@ class CategoryEndpointsTest extends TestCase
         $response = $this->getJson('/api/v1/categories?per_page=10');
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'data',
-                    'links',
-                    'meta' => [
-                        'current_page',
-                        'per_page',
-                        'total',
-                        'last_page'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'data',
+                'links',
+                'meta' => [
+                    'current_page',
+                    'per_page',
+                    'total',
+                    'last_page',
+                ],
+            ]);
 
         $this->assertCount(10, $response->json('data'));
         $this->assertEquals(25, $response->json('meta.total'));
@@ -90,36 +91,36 @@ class CategoryEndpointsTest extends TestCase
     {
         $category = Category::factory()->create([
             'name' => 'Technology',
-            'slug' => 'technology'
+            'slug' => 'technology',
         ]);
 
         $response = $this->getJson("/api/v1/categories/{$category->id}");
 
         $response->assertStatus(200)
-                ->assertJsonStructure([
-                    'data' => [
-                        'id',
-                        'name',
-                        'slug',
-                        'articles_count',
-                        'created_at',
-                        'updated_at'
-                    ]
-                ])
-                ->assertJson([
-                    'data' => [
-                        'id' => $category->id,
-                        'name' => 'Technology',
-                        'slug' => 'technology'
-                    ]
-                ]);
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'slug',
+                    'articles_count',
+                    'created_at',
+                    'updated_at',
+                ],
+            ])
+            ->assertJson([
+                'data' => [
+                    'id' => $category->id,
+                    'name' => 'Technology',
+                    'slug' => 'technology',
+                ],
+            ]);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function it_returns_404_for_non_existent_category()
     {
         $response = $this->getJson('/api/v1/categories/999');
-        
+
         $response->assertStatus(404);
     }
 
@@ -129,22 +130,22 @@ class CategoryEndpointsTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $categoryData = [
-            'name' => 'New Technology'
+            'name' => 'New Technology',
         ];
 
         $response = $this->postJson('/api/v1/categories', $categoryData);
 
         $response->assertStatus(201)
-                ->assertJson([
-                    'data' => [
-                        'name' => 'New Technology',
-                        'slug' => 'new-technology'
-                    ]
-                ]);
+            ->assertJson([
+                'data' => [
+                    'name' => 'New Technology',
+                    'slug' => 'new-technology',
+                ],
+            ]);
 
         $this->assertDatabaseHas('categories', [
             'name' => 'New Technology',
-            'slug' => 'new-technology'
+            'slug' => 'new-technology',
         ]);
     }
 
@@ -153,16 +154,16 @@ class CategoryEndpointsTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        // Create first category  
+        // Create first category
         Category::create(['name' => 'Technology News', 'slug' => 'technology-news']);
 
         // Create second category with name that would generate same slug
         $response = $this->postJson('/api/v1/categories', [
-            'name' => 'Technology-News!'  // This should generate 'technology-news' but will be made unique
+            'name' => 'Technology-News!',  // This should generate 'technology-news' but will be made unique
         ]);
 
         $response->assertStatus(201);
-        
+
         // Should create with incremented slug since technology-news already exists
         $createdCategory = Category::where('name', 'Technology-News!')->first();
         $this->assertEquals('technology-news-1', $createdCategory->slug);
@@ -176,20 +177,20 @@ class CategoryEndpointsTest extends TestCase
         // Test missing name
         $response = $this->postJson('/api/v1/categories', []);
         $response->assertStatus(422)
-                ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
 
         // Test duplicate name
         Category::factory()->create(['name' => 'Existing Category']);
         $response = $this->postJson('/api/v1/categories', ['name' => 'Existing Category']);
         $response->assertStatus(422)
-                ->assertJsonValidationErrors(['name']);
+            ->assertJsonValidationErrors(['name']);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function unauthenticated_user_cannot_create_category()
     {
         $response = $this->postJson('/api/v1/categories', ['name' => 'Test Category']);
-        
+
         $response->assertStatus(401);
     }
 
@@ -200,27 +201,27 @@ class CategoryEndpointsTest extends TestCase
 
         $category = Category::factory()->create([
             'name' => 'Old Name',
-            'slug' => 'old-name'
+            'slug' => 'old-name',
         ]);
 
         $updateData = [
-            'name' => 'New Name'
+            'name' => 'New Name',
         ];
 
         $response = $this->putJson("/api/v1/categories/{$category->id}", $updateData);
 
         $response->assertStatus(200)
-                ->assertJson([
-                    'data' => [
-                        'name' => 'New Name',
-                        'slug' => 'new-name' // should auto-update slug
-                    ]
-                ]);
+            ->assertJson([
+                'data' => [
+                    'name' => 'New Name',
+                    'slug' => 'new-name', // should auto-update slug
+                ],
+            ]);
 
         $this->assertDatabaseHas('categories', [
             'id' => $category->id,
             'name' => 'New Name',
-            'slug' => 'new-name'
+            'slug' => 'new-name',
         ]);
     }
 
@@ -234,9 +235,9 @@ class CategoryEndpointsTest extends TestCase
         $response = $this->deleteJson("/api/v1/categories/{$category->id}");
 
         $response->assertStatus(200)
-                ->assertJson([
-                    'message' => 'Category deleted successfully'
-                ]);
+            ->assertJson([
+                'message' => 'Category deleted successfully',
+            ]);
 
         $this->assertDatabaseMissing('categories', ['id' => $category->id]);
     }
@@ -247,20 +248,20 @@ class CategoryEndpointsTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $category = Category::factory()->create();
-        
+
         // Create articles in this category
         Article::factory(2)->create([
             'source_id' => $this->source->id,
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ]);
 
         $response = $this->deleteJson("/api/v1/categories/{$category->id}");
 
         $response->assertStatus(400)
-                ->assertJson([
-                    'message' => 'Cannot delete category that has associated articles',
-                    'data' => ['articles_count' => 2]
-                ]);
+            ->assertJson([
+                'message' => 'Cannot delete category that has associated articles',
+                'data' => ['articles_count' => 2],
+            ]);
 
         $this->assertDatabaseHas('categories', ['id' => $category->id]);
     }
@@ -269,24 +270,24 @@ class CategoryEndpointsTest extends TestCase
     public function it_can_get_articles_for_category()
     {
         $category = Category::factory()->create();
-        
+
         // Create articles in this category
         Article::factory(3)->create([
             'source_id' => $this->source->id,
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ]);
-        
+
         // Create articles in other categories
         Article::factory(2)->create([
             'source_id' => $this->source->id,
-            'category_id' => Category::factory()->create()->id
+            'category_id' => Category::factory()->create()->id,
         ]);
 
         $response = $this->getJson("/api/v1/categories/{$category->id}/articles");
 
         $response->assertStatus(200);
         $this->assertCount(3, $response->json('data'));
-        
+
         // Verify all articles belong to the correct category
         foreach ($response->json('data') as $article) {
             $this->assertEquals($category->id, $article['category']['id']);
@@ -297,17 +298,17 @@ class CategoryEndpointsTest extends TestCase
     public function it_can_search_articles_within_category()
     {
         $category = Category::factory()->create();
-        
+
         Article::factory()->create([
             'title' => 'Laravel Framework Update',
             'source_id' => $this->source->id,
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ]);
-        
+
         Article::factory()->create([
             'title' => 'React Development Guide',
             'source_id' => $this->source->id,
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ]);
 
         $response = $this->getJson("/api/v1/categories/{$category->id}/articles?q=Laravel");
@@ -321,17 +322,17 @@ class CategoryEndpointsTest extends TestCase
     public function it_can_filter_category_articles_by_date()
     {
         $category = Category::factory()->create();
-        
+
         Article::factory()->create([
             'source_id' => $this->source->id,
             'category_id' => $category->id,
-            'published_at' => '2024-01-15 10:00:00'
+            'published_at' => '2024-01-15 10:00:00',
         ]);
-        
+
         Article::factory()->create([
             'source_id' => $this->source->id,
             'category_id' => $category->id,
-            'published_at' => '2024-03-15 10:00:00'
+            'published_at' => '2024-03-15 10:00:00',
         ]);
 
         $response = $this->getJson("/api/v1/categories/{$category->id}/articles?from=2024-02-01&to=2024-12-31");
@@ -351,7 +352,7 @@ class CategoryEndpointsTest extends TestCase
 
         $response->assertStatus(200);
         $categories = $response->json('data');
-        
+
         $this->assertEquals('Alpha Category', $categories[0]['name']);
         $this->assertEquals('Beta Category', $categories[1]['name']);
         $this->assertEquals('Zebra Category', $categories[2]['name']);

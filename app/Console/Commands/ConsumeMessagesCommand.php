@@ -1,16 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Contracts\MessageBrokerInterface;
+use App\Services\Messaging\MessageProcessor;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\Services\Messaging\MessageProcessor;
-use App\Contracts\MessageBrokerInterface;
 
 class ConsumeMessagesCommand extends Command
 {
     protected $signature = 'messaging:consume {destination=source.fetch.failed} {--limit=0}';
+
     protected $description = 'Consume messages from a Redis list destination and process them (simple example)';
 
     private MessageBrokerInterface $broker;
@@ -32,7 +34,7 @@ class ConsumeMessagesCommand extends Command
         $limit = (int) $this->option('limit');
         $count = 0;
 
-        $processor = new MessageProcessor();
+        $processor = new MessageProcessor;
 
         while (true) {
             $message = $this->broker->pop($destination);
@@ -45,8 +47,9 @@ class ConsumeMessagesCommand extends Command
 
             if (! is_array($payload) || ! $processor->validate($payload)) {
                 Log::warning('ConsumeMessagesCommand: invalid message schema, pushing to DLQ', ['destination' => $destination, 'message' => $message]);
-                $dlq = config('messaging.dlq_prefix') . $destination;
+                $dlq = config('messaging.dlq_prefix').$destination;
                 $this->broker->push($dlq, $message);
+
                 continue;
             }
 
@@ -54,6 +57,7 @@ class ConsumeMessagesCommand extends Command
             try {
                 if ($processor->alreadyProcessed($payload)) {
                     Log::info('ConsumeMessagesCommand: skipping already-processed message', ['idempotency_key' => $processor->idempotencyKey($payload)]);
+
                     continue;
                 }
             } catch (\Throwable $e) {
@@ -64,10 +68,10 @@ class ConsumeMessagesCommand extends Command
             // Process message and handle errors by sending to DLQ
             try {
                 $processor->process($payload);
-                $this->line('Processed message: ' . (string) json_encode($payload));
+                $this->line('Processed message: '.(string) json_encode($payload));
             } catch (\Throwable $e) {
                 Log::error('ConsumeMessagesCommand: processing failed, pushing to DLQ', ['error' => $e->getMessage(), 'message' => $payload]);
-                $dlq = config('messaging.dlq_prefix') . $destination;
+                $dlq = config('messaging.dlq_prefix').$destination;
                 $this->broker->push($dlq, (string) json_encode($payload));
             }
 

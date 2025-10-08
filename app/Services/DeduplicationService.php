@@ -1,12 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
 
 use App\Models\Article;
-use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Small service that detects duplicates among Article records.
@@ -21,8 +21,7 @@ class DeduplicationService
     /**
      * Return the matching Article model if a duplicate is found, or null.
      *
-    * @param array<string,mixed> $candidate Candidate article data (must include url/title/external_id/source_id as available)
-    * @return \App\Models\Article|null
+     * @param  array<string,mixed>  $candidate  Candidate article data (must include url/title/external_id/source_id as available)
      */
     public function findDuplicate(array $candidate): ?Article
     {
@@ -65,7 +64,7 @@ class DeduplicationService
         // Check by normalized URL against recent articles (in-memory comparison)
         if (! empty($candidate['url'])) {
             $candidateNorm = $this->normalizeUrl($candidate['url']);
-            $recent = Article::select('id','url','title','published_at')
+            $recent = Article::select('id', 'url', 'title', 'published_at')
                 ->where('published_at', '>=', $recentSince)
                 ->whereNotNull('url')
                 ->get();
@@ -84,7 +83,7 @@ class DeduplicationService
         if (! empty($candidate['title'])) {
             $title = Str::lower(trim($candidate['title']));
 
-            $recentTitles = Article::select('id','title')
+            $recentTitles = Article::select('id', 'title')
                 ->whereNotNull('title')
                 ->where('published_at', '>=', $recentSince)
                 ->get();
@@ -110,8 +109,7 @@ class DeduplicationService
     /**
      * Convenience boolean wrapper for findDuplicate().
      *
-    * @param array<string,mixed> $candidate
-    * @return bool
+     * @param  array<string,mixed>  $candidate
      */
     public function isDuplicate(array $candidate): bool
     {
@@ -120,9 +118,6 @@ class DeduplicationService
 
     /**
      * Normalize a URL for basic comparison (strip scheme & trailing slash).
-     *
-     * @param string $url
-     * @return string
      */
     protected function normalizeUrl(string $url): string
     {
@@ -135,15 +130,15 @@ class DeduplicationService
         $host = $parts['host'] ?? '';
         $path = $parts['path'] ?? '';
 
-        $norm = strtolower(rtrim($host . $path, '/'));
+        $norm = strtolower(rtrim($host.$path, '/'));
+
         return $norm;
     }
 
     /**
      * Merge incoming data into an existing article.
      *
-     * @param Article $existing
-     * @param array<string,mixed> $data
+     * @param  array<string,mixed>  $data
      */
     public function mergeIntoExisting(Article $existing, array $data): void
     {
@@ -153,7 +148,7 @@ class DeduplicationService
         $existing->url = $data['url'] ?? $existing->url;
         $existing->image_url = $data['image_url'] ?? $existing->image_url;
 
-        if (!empty($data['published_at'])) {
+        if (! empty($data['published_at'])) {
             $candidateTs = strtotime($data['published_at']);
             $existingTs = $existing->published_at ? $existing->published_at->getTimestamp() : 0;
             if ($candidateTs > $existingTs) {
@@ -164,15 +159,15 @@ class DeduplicationService
         $existingRaw = $existing->raw_json ?? [];
         $existing->raw_json = array_merge((array) $existingRaw, (array) ($data['raw_json'] ?? []));
 
-        if (empty($existing->external_id) && !empty($data['external_id'])) {
+        if (empty($existing->external_id) && ! empty($data['external_id'])) {
             $existing->external_id = $data['external_id'];
         }
 
-        if (!empty($data['author_id']) && empty($existing->author_id)) {
+        if (! empty($data['author_id']) && empty($existing->author_id)) {
             $existing->author_id = $data['author_id'];
         }
 
-        if (!empty($data['category_id']) && empty($existing->category_id)) {
+        if (! empty($data['category_id']) && empty($existing->category_id)) {
             $existing->category_id = $data['category_id'];
         }
 

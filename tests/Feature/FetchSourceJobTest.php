@@ -2,13 +2,11 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\Source;
 use App\Jobs\FetchSourceJob;
-use App\Models\Author;
-use App\Models\Category;
 use App\Models\Article;
+use App\Models\Source;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class FetchSourceJobTest extends TestCase
 {
@@ -24,7 +22,7 @@ class FetchSourceJobTest extends TestCase
     public function test_job_persists_author_category_and_article()
     {
         // create a source record
-    $source = Source::factory()->create(['slug' => 'newsapi', 'name' => 'Test Source']);
+        $source = Source::factory()->create(['slug' => 'newsapi', 'name' => 'Test Source']);
 
         // mock adapter implementing the SourceAdapterInterface
         $fakeAdapter = $this->createMock(\App\Contracts\SourceAdapterInterface::class);
@@ -40,7 +38,7 @@ class FetchSourceJobTest extends TestCase
                 'author' => 'Fetch Author',
                 'category' => 'Testing',
             ],
-    ]));
+        ]));
 
         // run the job using the fake adapter
         $job = new FetchSourceJob($source, $fakeAdapter);

@@ -1,20 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Contracts\MessageBrokerInterface;
+use Illuminate\Console\Command;
 
 class PublishSampleMessageCommand extends Command
 {
     protected $signature = 'messaging:publish-sample {destination=source.fetch.failed}';
+
     protected $description = 'Publish a small sample message to the configured broker (for smoke tests)';
 
     public function handle(MessageBrokerInterface $broker): int
     {
-    $arg = $this->argument('destination');
-    $destination = is_array($arg) ? implode(' ', $arg) : (string) $arg;
+        $arg = $this->argument('destination');
+        $destination = is_array($arg) ? implode(' ', $arg) : (string) $arg;
 
         // Publish a NewsAPI-like article payload so consumers can normalize/persist it
         $payload = [
@@ -35,10 +37,11 @@ class PublishSampleMessageCommand extends Command
             ],
         ];
 
-    // Broker API expects string messages; encode the payload to JSON
-    $broker->publish($destination, (string) json_encode($payload));
+        // Broker API expects string messages; encode the payload to JSON
+        $broker->publish($destination, (string) json_encode($payload));
 
-        $this->info('Published sample message to ' . $destination);
+        $this->info('Published sample message to '.$destination);
+
         return 0;
     }
 }

@@ -1,24 +1,25 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Support\Facades\Redis;
+use Tests\TestCase;
 
 class MessagingConsumeTest extends TestCase
 {
     public function test_consume_command_processes_messages_from_redis()
     {
         $source = \App\Models\Source::factory()->create(['id' => 1, 'slug' => 'test-source']);
-    $validMessage = (string) json_encode([
+        $validMessage = (string) json_encode([
             'version' => 1,
             'type' => 'source.fetch.failed',
             'data' => [
                 'source_id' => 1,
                 'error_message' => 'Network timeout',
-                'exhausted' => false
-            ]
+                'exhausted' => false,
+            ],
         ]);
         Redis::shouldReceive('rpop')->once()->andReturn($validMessage);
         Redis::shouldReceive('rpop')->once()->andReturnNull();

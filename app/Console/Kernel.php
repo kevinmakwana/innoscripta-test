@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Console;
@@ -24,7 +25,7 @@ class Kernel extends ConsoleKernel
 
     protected function commands(): void
     {
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__.'/Commands');
 
         // Additional console commands for messaging (publish/consume) live
         // under app/Console/Commands and are auto-loaded by the above call.

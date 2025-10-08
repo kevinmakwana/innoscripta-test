@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\UserPreference;
 use App\Http\Resources\UserPreferenceResource;
+use App\Models\UserPreference;
+use Illuminate\Http\Request;
 
 /**
  * Controller for managing a user's reading preferences (selected sources,
@@ -21,6 +22,7 @@ class UserPreferenceController extends Controller
     public function index(Request $request): \App\Http\Resources\UserPreferenceResource
     {
         $prefs = UserPreference::where('user_id', $request->user()->id)->first();
+
         return new UserPreferenceResource($prefs);
     }
 

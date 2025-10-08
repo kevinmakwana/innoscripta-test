@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Article;
 use App\Models\Source;
 use App\Services\DeduplicationService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class FetchMergeTest extends TestCase
 {
@@ -37,7 +37,7 @@ class FetchMergeTest extends TestCase
             'raw_json' => ['b' => 2],
         ];
 
-        $deduper = new DeduplicationService();
+        $deduper = new DeduplicationService;
 
         $candidate = $normalized;
         $candidate['source_id'] = $source->id;

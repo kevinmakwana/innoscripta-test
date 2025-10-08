@@ -1,4 +1,5 @@
 <?php
+
 // Lightweight PHPDoc scanner -> simple HTML docs generator
 // Usage: php tools/generate_phpdoc.php
 
@@ -11,6 +12,7 @@ function scan_dir($dir)
             $files[] = $f->getPathname();
         }
     }
+
     return $files;
 }
 
@@ -35,6 +37,7 @@ function parse_file($path)
                     $i++;
                 }
                 $namespace = $ns;
+
                 continue;
             }
 
@@ -45,9 +48,11 @@ function parse_file($path)
             if ($t[0] === T_CLASS || $t[0] === T_INTERFACE || $t[0] === T_TRAIT) {
                 // find class name
                 $j = $i + 1;
-                while (isset($tokens[$j]) && $tokens[$j][0] !== T_STRING) { $j++; }
+                while (isset($tokens[$j]) && $tokens[$j][0] !== T_STRING) {
+                    $j++;
+                }
                 $className = $tokens[$j][1] ?? 'UNKNOWN';
-                $full = $namespace ? ($namespace . '\\' . $className) : $className;
+                $full = $namespace ? ($namespace.'\\'.$className) : $className;
                 $items[] = ['type' => 'class', 'name' => $full, 'doc' => $lastDoc, 'methods' => []];
                 $lastDoc = null;
             }
@@ -55,11 +60,13 @@ function parse_file($path)
             if ($t[0] === T_FUNCTION) {
                 // find function name
                 $j = $i + 1;
-                while (isset($tokens[$j]) && $tokens[$j][0] !== T_STRING) { $j++; }
+                while (isset($tokens[$j]) && $tokens[$j][0] !== T_STRING) {
+                    $j++;
+                }
                 $fname = $tokens[$j][1] ?? 'anonymous';
                 // attach to last class if present
-                if (!empty($items) && $items[count($items)-1]['type'] === 'class') {
-                    $items[count($items)-1]['methods'][] = ['name' => $fname, 'doc' => $lastDoc];
+                if (! empty($items) && $items[count($items) - 1]['type'] === 'class') {
+                    $items[count($items) - 1]['methods'][] = ['name' => $fname, 'doc' => $lastDoc];
                 } else {
                     $items[] = ['type' => 'function', 'name' => $fname, 'doc' => $lastDoc];
                 }
@@ -72,10 +79,12 @@ function parse_file($path)
     return $items;
 }
 
-$base = __DIR__ . '/..';
-$appDir = $base . '/app';
-$outDir = $base . '/docs/phpdoc';
-if (!is_dir($outDir)) { mkdir($outDir, 0777, true); }
+$base = __DIR__.'/..';
+$appDir = $base.'/app';
+$outDir = $base.'/docs/phpdoc';
+if (! is_dir($outDir)) {
+    mkdir($outDir, 0777, true);
+}
 
 $files = scan_dir($appDir);
 $docs = [];
@@ -86,30 +95,36 @@ foreach ($files as $f) {
     }
 }
 
-$html = "<!doctype html><html><head><meta charset=\"utf-8\"><title>PHPDoc - Innoscripta Test</title><style>body{font-family:Arial,Helvetica,sans-serif}pre{background:#f7f7f7;padding:8px;border-radius:4px}</style></head><body>";
-$html .= "<h1>PHPDoc Summary</h1>";
+$html = '<!doctype html><html><head><meta charset="utf-8"><title>PHPDoc - Innoscripta Test</title><style>body{font-family:Arial,Helvetica,sans-serif}pre{background:#f7f7f7;padding:8px;border-radius:4px}</style></head><body>';
+$html .= '<h1>PHPDoc Summary</h1>';
 foreach ($docs as $file => $items) {
-    $html .= "<h2>File: " . htmlspecialchars(str_replace($base . '/', '', $file)) . "</h2>\n";
+    $html .= '<h2>File: '.htmlspecialchars(str_replace($base.'/', '', $file))."</h2>\n";
     foreach ($items as $it) {
         if ($it['type'] === 'class') {
-            $html .= "<h3>Class: " . htmlspecialchars($it['name']) . "</h3>\n";
-            if ($it['doc']) { $html .= "<pre>" . htmlspecialchars(trim($it['doc'])) . "</pre>\n"; }
-            if (!empty($it['methods'])) {
+            $html .= '<h3>Class: '.htmlspecialchars($it['name'])."</h3>\n";
+            if ($it['doc']) {
+                $html .= '<pre>'.htmlspecialchars(trim($it['doc']))."</pre>\n";
+            }
+            if (! empty($it['methods'])) {
                 $html .= "<h4>Methods</h4>\n<ul>";
                 foreach ($it['methods'] as $m) {
-                    $html .= "<li><b>" . htmlspecialchars($m['name']) . "</b>";
-                    if ($m['doc']) { $html .= "<pre>" . htmlspecialchars(trim($m['doc'])) . "</pre>"; }
+                    $html .= '<li><b>'.htmlspecialchars($m['name']).'</b>';
+                    if ($m['doc']) {
+                        $html .= '<pre>'.htmlspecialchars(trim($m['doc'])).'</pre>';
+                    }
                     $html .= "</li>\n";
                 }
                 $html .= "</ul>\n";
             }
         } else {
-            $html .= "<h3>Function: " . htmlspecialchars($it['name']) . "</h3>\n";
-            if ($it['doc']) { $html .= "<pre>" . htmlspecialchars(trim($it['doc'])) . "</pre>\n"; }
+            $html .= '<h3>Function: '.htmlspecialchars($it['name'])."</h3>\n";
+            if ($it['doc']) {
+                $html .= '<pre>'.htmlspecialchars(trim($it['doc']))."</pre>\n";
+            }
         }
     }
 }
 
-$html .= "</body></html>";
-file_put_contents($outDir . '/index.html', $html);
+$html .= '</body></html>';
+file_put_contents($outDir.'/index.html', $html);
 echo "Generated docs at docs/phpdoc/index.html\n";

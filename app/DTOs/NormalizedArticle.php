@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\DTOs;
@@ -6,23 +7,32 @@ namespace App\DTOs;
 final class NormalizedArticle
 {
     public readonly ?string $external_id;
+
     public readonly ?string $title;
+
     public readonly ?string $excerpt;
+
     public readonly ?string $body;
+
     public readonly ?string $url;
+
     public readonly ?string $image_url;
+
     public readonly ?string $published_at;
+
     /** @var array<string,mixed>|null */
     public readonly ?array $author;
+
     /** @var array<string,mixed>|null */
     public readonly ?array $category;
+
     /** @var array<string,mixed> */
     public readonly array $raw_json;
 
     /**
-     * @param array<string,mixed>|null $author
-     * @param array<string,mixed>|null $category
-     * @param array<string,mixed> $raw_json
+     * @param  array<string,mixed>|null  $author
+     * @param  array<string,mixed>|null  $category
+     * @param  array<string,mixed>  $raw_json
      */
     public function __construct(?string $external_id, ?string $title, ?string $excerpt, ?string $body, ?string $url, ?string $image_url, ?string $published_at, ?array $author = null, ?array $category = null, array $raw_json = [])
     {
